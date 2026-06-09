@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONEOK - Executive Copilot Immersion</title>
+<style>
+  :root{--navy:#123E5E;--blue:#2B6CB0;--ink:#1a1a1a;--grey:#6b7280;--bg:#f5f7fa;
+        --amber:#b45309;--green:#15803d;--line:#e2e8f0;--code:#0f2740;}
+  *{box-sizing:border-box;}
+  body{font-family:'Segoe UI',-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
+       margin:0;background:var(--bg);line-height:1.55;font-size:15px;}
+  .wrap{max-width:980px;margin:0 auto;padding:0 28px 80px;}
+  header{background:#000;color:#fff;padding:38px 28px 30px;}
+  header .wrap{padding:0;}
+  header h1{margin:0 0 6px;font-size:30px;font-weight:700;}
+  header p{margin:2px 0;opacity:.92;font-size:15px;}
+  .pill{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+        border-radius:999px;padding:3px 12px;font-size:12px;margin-top:10px;}
+  .disclaimer{background:#fff8e6;border:1px solid #f0d98c;color:#7a5b00;border-radius:8px;
+              padding:10px 14px;font-size:12.5px;margin:18px 0;}
+  h2{color:var(--navy);font-size:22px;border-bottom:2px solid var(--line);padding-bottom:6px;margin-top:42px;}
+  h3{color:var(--blue);font-size:17px;margin:26px 0 6px;}
+  .seg{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:18px 0;
+       box-shadow:0 1px 2px rgba(0,0,0,.04);}
+  .seg .meta{font-size:12.5px;color:var(--grey);margin:0 0 4px;text-transform:uppercase;letter-spacing:.04em;}
+  .tag{display:inline-block;font-size:11px;font-weight:600;border-radius:6px;padding:2px 8px;margin-left:6px;vertical-align:middle;}
+  .tag.core{background:#e0ecfb;color:var(--navy);}
+  .tag.stretch{background:#fde8d4;color:var(--amber);}
+  .tag.run{background:#dcfce7;color:var(--green);}
+  .tag.example{background:#ede9fe;color:#6d28d9;}
+  pre{background:var(--code);color:#e8f0fb;border-radius:8px;padding:13px 15px;font-size:13.5px;
+      white-space:pre-wrap;overflow-x:auto;font-family:'Cascadia Code',Consolas,monospace;margin:8px 0;}
+  .outcome{background:#f0fdf4;border-left:4px solid var(--green);padding:9px 13px;border-radius:0 6px 6px 0;
+           font-size:14px;margin:8px 0;}
+  .file{background:#eef2f7;border:1px solid #d7dee8;border-radius:6px;padding:7px 11px;font-size:13px;
+        margin:8px 0;display:flex;gap:8px;align-items:flex-start;}
+  .file b{color:var(--navy);}
+  .note{background:#eef6ff;border-left:4px solid var(--blue);padding:9px 13px;font-size:13.5px;border-radius:0 6px 6px 0;margin:8px 0;}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--navy);color:#fff;font-weight:600;}
+  tr:nth-child(even) td{background:#fafbfc;}
+  .kick{background:#fff4ed;border:1px dashed var(--amber);border-radius:8px;padding:10px 14px;font-size:13.5px;
+        margin:10px 0;color:#7a3e00;}
+  ol.steps{margin:8px 0 0 18px;padding:0;}
+  ol.steps li{margin:5px 0;}
+  .toc{columns:2;font-size:14px;}
+  .toc a{color:var(--navy);text-decoration:none;}
+  .toc a:hover{text-decoration:underline;}
+  footer{color:var(--grey);font-size:12.5px;text-align:center;margin-top:40px;}
+  @media print{body{background:#fff;}.seg{box-shadow:none;break-inside:avoid;}header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+
+  details.section{background:#fff;border:1px solid var(--line);border-radius:12px;margin:18px 0;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);overflow:hidden;}
+  details.section>summary{list-style:none;cursor:pointer;color:var(--navy);font-size:22px;font-weight:700;
+    padding:14px 20px;display:flex;align-items:center;gap:11px;background:#f8fafc;}
+  details.section[open]>summary{border-bottom:1px solid var(--line);}
+  details.section>summary::-webkit-details-marker{display:none;}
+  details.section>summary::before{content:"\25B6";font-size:13px;color:var(--blue);
+    transition:transform .15s ease;flex:0 0 auto;}
+  details.section[open]>summary::before{transform:rotate(90deg);}
+  details.section>summary:hover{background:#eef3f9;}
+  details.section>.seg{border:none;border-radius:0;box-shadow:none;margin:0;}
+  .controls{display:flex;gap:10px;margin:14px 0 4px;}
+  .controls button{font-family:inherit;font-size:13px;font-weight:600;color:var(--navy);
+    background:#e0ecfb;border:1px solid #c4d8f2;border-radius:7px;padding:6px 14px;cursor:pointer;}
+  .controls button:hover{background:#d2e3f8;}
+  @media print{details.section>summary::before{display:none;}}
+  pre { position: relative; padding-right: 48px; }
+  .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.12); color: #e8f0fb; border: 1px solid rgba(255,255,255,0.28); border-radius: 5px; padding: 3px 8px; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1; }
+  .copy-btn:hover { background: rgba(255,255,255,0.22); }
+  .copy-btn.copied { background: #15803d; border-color: #15803d; color: #fff; }
+  .copy-btn svg { width: 12px; height: 12px; fill: currentColor; }
+  @media print { .copy-btn { display: none !important; } }
+  td a{color:var(--blue);text-decoration:none;}
+  td a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+    <div>
+    <h1>Executive Copilot Immersion</h1>
+    <p>Hands-on session guide &middot; June 2026</p>
+    <span class="pill">Microsoft 365 Copilot &middot; Facilitator: Blake Jones, Microsoft</span>
+    </div>
+    <img src="https://companieslogo.com/img/orig/OKE_BIG.D-1e273052.png?t=1720244493" alt="ONEOK" style="height:58px;width:auto;flex:0 0 auto;display:block;">
+  </div>
+</header>
+<div class="wrap">
+
+<div class="disclaimer"><b>Demonstration content.</b> Every file, name, figure, and policy used in this
+session is fictional and created for training. Nothing here represents real ONEOK data, people, financials,
+or policy.</div>
+
+<h2 id="how">How this session works</h2>
+<p>This is a hands-on, ~2.5-hour immersion. You will work in your own Microsoft 365 Copilot on a set of
+sample ONEOK-flavored files provided on the session SharePoint site. Two long-running tasks (Researcher
+and a generated PowerPoint) are kicked off early and reviewed later, so the session keeps moving while
+they run. <span class="tag core">CORE</span> segments are the backbone; <span class="tag stretch">STRETCH</span>
+segments run only if we're ahead of pace.</p>
+
+<h3>Run sheet</h3>
+<table>
+<tr><th>Segment</th><th></th></tr>
+<tr><td>Welcome, business framing, login check</td><td></td></tr>
+<tr><td><a href="#s1">1. Copilot app orientation &mdash; WorkIQ, model selection, security</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s2">2. Chat basics + Personalization &amp; Memory</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s3">3. Chat builds a Researcher prompt &rarr; kick off Researcher</a></td><td><span class="tag run">KICK OFF</span></td></tr>
+<tr><td><b>Break #1</b> (Researcher runs)</td><td></td></tr>
+<tr><td><a href="#s4">4. Outlook &mdash; find time, summarize thread, draft + tone</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s5">5. Teams &mdash; Intelligent Recap: catch up on a meeting, ask what was discussed</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s6">6. Analyst + Copilot in Excel</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><b>Break #2</b></td><td></td></tr>
+<tr><td><a href="#s7">7. Word &mdash; review report, track changes, integrity/HSE policy compare</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s8">8. PowerPoint from Word &rarr; kick off generation</a></td><td><span class="tag run">KICK OFF</span></td></tr>
+<tr><td><a href="#s9">9. Notebooks (+ Create agent if ahead)</a></td><td><span class="tag core">CORE</span></td></tr>
+<tr><td><a href="#s10">10&ndash;11. Create agent / Agent Builder (if time)</a></td><td><span class="tag stretch">STRETCH</span></td></tr>
+<tr><td><b>Q&amp;A / open time</b></td><td></td></tr>
+</table>
+<div class="note"><b>Breaks:</b> we'll take a 5&ndash;10 minute break roughly every 45 minutes.</div>
+
+<div class="controls">
+  <button type="button" onclick="setAll(true)">Expand all</button>
+  <button type="button" onclick="setAll(false)">Collapse all</button>
+</div>
+
+<!-- 1 -->
+<details class="section" id="s1">
+<summary>1. Copilot app orientation <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Orient to the Microsoft 365 Copilot app, left to right, before doing anything. Three things matter to
+executives: what's grounding the answers (WorkIQ), that you can pick the reasoning model, and that your
+data is protected.</p>
+<h3>WorkIQ &mdash; what's grounding Copilot</h3>
+<p>WorkIQ is the work-grounding layer in the Copilot app: it connects Copilot to your work content and
+context (your emails, files, chats, meetings, and people) so answers are grounded in <i>your</i>
+organization, not just the open web. Point out the WorkIQ control at the top left of the Chat screen (on
+older tenants this still appears as a Work / Web toggle).</p>
+<div class="note"><b>Talking point:</b> "When Copilot answers a work question, WorkIQ is what lets it reason
+over your tenant's content with your permissions &mdash; you only ever see what you already have access to."</div>
+<h3>Model selection</h3>
+<p>Show that a model picker is available. Most executives won't change it, but they should know reasoning
+depth is a choice &mdash; a quick everyday answer vs. a deeper, slower reasoning pass.</p>
+<h3>Security &amp; data protection</h3>
+<div class="outcome">Key message: content you type, upload, or send to Copilot stays inside your Microsoft
+365 trust boundary. It is protected by the same enterprise controls as the rest of your tenant (identity,
+encryption, and data-protection policies), is not used to train the foundation models, and respects your
+existing access permissions and sensitivity labels.</div>
+<div class="note"><b>Facilitator:</b> confirm the exact WorkIQ control and model-picker placement on your own
+screen before the session &mdash; layouts vary by tenant rollout.</div>
+</div>
+</details>
+
+<!-- 2 -->
+<details class="section" id="s2">
+<summary>2. Chat basics + Personalization &amp; Memory <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Run a few everyday prompts, then make Copilot respond the way <i>you</i> want using Custom Instructions
+and Memory &mdash; changes that pay off in every app for the rest of the session.</p>
+<h3>Warm-up prompts</h3>
+<pre>Summarize what's on my calendar today and flag anything that needs prep.</pre>
+<pre>What are the three most important emails in my inbox from the last 24 hours, and why?</pre>
+<pre>Draft three subject-line options for an update to my leadership team on Q2 operations.</pre>
+<div class="outcome">Expected: fast, grounded answers from your own work content. Don't focus on wording yet
+&mdash; that's next.</div>
+<div class="note"><b>Tip:</b> once you land a prompt you like, you can <b>save it</b> for one-click reuse, or
+<b>schedule it</b> to run on a recurring basis (e.g., a Monday-morning inbox-and-calendar digest).</div>
+<h3>"Is Copilot responding the way you'd like?"</h3>
+<p>Ask the room about <i>style, tone, and format</i> &mdash; not content. Most will want shorter, more
+executive answers. That's the cue for Custom Instructions.</p>
+<h3>Custom Instructions &mdash; set how Copilot always responds</h3>
+<p>Custom Instructions are persistent preferences you set once. They are sent at the start of <i>every</i>
+Copilot conversation, so they shape tone, structure, and style everywhere. This is the right home for "how I
+always want Copilot to respond." Open Custom Instructions and paste an example:</p>
+<p style="margin:10px 0 4px;"><span class="tag example">EXAMPLE &middot; BLAKE'S OWN SETTINGS</span>
+The instructions below are Blake's personal Copilot settings, left here for reference. Use them as a
+starting point and adapt to your own preferences.</p>
+<pre>Response style
+- Be concise and direct
+- Do not restate my question
+- Do not use encouragement, reassurance, or emotional language
+- Offer critiques and alternatives if my question suggests an inefficient approach
+- Skip filler, introductions, and closings
+- Ask clarifying questions before responding if needed; avoid guessing at intent
+
+Tone
+- Neutral, professional, and pragmatic
+- Assume I am technical and time constrained
+
+Structure
+- Use bullet points or numbered lists when helpful
+- Prefer short paragraphs or single-line answers
+- Avoid long explanations unless I explicitly ask for detail
+
+Content preferences
+- Focus on facts and options
+- Highlight tradeoffs or constraints when relevant
+- Ask clarifying questions if necessary
+- Do not over-qualify answers, except to clarify customer-facing vs internal only
+
+Formatting rules
+- No emojis
+- No em dashes
+- No conversational filler
+- No motivational or emotional language</pre>
+<p>Re-run an earlier prompt and show the difference:</p>
+<pre>Now summarize what's on my calendar today.</pre>
+<div class="outcome">Expected: the same request returns tighter, with no filler and no restating the question
+&mdash; in the voice you defined. Custom Instructions apply from the first message of every new conversation.</div>
+<h3>Memory &mdash; context-specific recall, on demand</h3>
+<p>Memories are saved as needed and referenced only when they're relevant to what you're doing &mdash; not on
+every turn. Use Memory for behaviors that should kick in only in a particular situation. Set one live:</p>
+<pre>When I ask for help prioritizing my day, always respond with a table and include the justification for why you think each item is a priority.</pre>
+<p>Later, trigger it naturally:</p>
+<pre>Help me prioritize my day.</pre>
+<div class="outcome">Expected: Copilot returns a prioritized table with a justification column, without you
+restating the format &mdash; because the memory was relevant to that request. Show where saved memories live
+so attendees can edit or remove them.</div>
+<div class="note"><b>Custom Instructions vs Memory:</b> Custom Instructions are sent at the start of every
+conversation and shape how Copilot always responds. Memories are referenced on-demand, only when the
+conversation context makes them relevant. Rule of thumb: global style and tone go in Custom Instructions;
+situational behaviors go in Memory.</div>
+<div class="note"><b>Why early:</b> the Custom Instructions and memory you set here carry into Outlook, Word,
+and Excel later &mdash; so the improvement compounds across the whole session.</div>
+</div>
+</details>
+
+<!-- 3 -->
+<details class="section" id="s3">
+<summary>3. Researcher &mdash; let Chat build the prompt <span class="tag run">KICK OFF &amp; LET IT RUN</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Two ideas here: you don't need to write the perfect research prompt (let Chat build it), and you can show
+<i>why</i> Researcher exists by running the <b>same prompt in Chat and in Researcher</b> and comparing the two
+answers. Then leave Researcher running while we move on.</p>
+<h3>Step 1 &mdash; have Chat draft the prompt</h3>
+<pre>I want to use Researcher to study the outlook for U.S. NGL and LPG export demand through 2030 and what it means for a Permian-weighted midstream operator. Help me write a strong, well-scoped Researcher prompt for that. Ask me anything you need first. Do not perform the research yet.</pre>
+<div class="outcome">Expected: Chat asks a couple of clarifying questions, then produces a tightened,
+well-scoped prompt you can reuse.</div>
+<h3>Step 2 &mdash; run the prompt in Chat first</h3>
+<p>Before touching Researcher, run the prompt Chat built in <b>regular Chat</b> and look at what comes back.</p>
+<div class="outcome">Expected: a fast, useful answer in seconds &mdash; but single-pass: shorter, with few or
+no citations and limited depth. Good for a quick take.</div>
+<h3>Step 3 &mdash; run the same prompt in Researcher</h3>
+<ol class="steps">
+<li>Switch to <b>Researcher</b>.</li>
+<li>Paste the <i>same</i> prompt and start the run.</li>
+</ol>
+<div class="outcome">That side-by-side is the point: same prompt, very different output. Researcher takes
+longer but runs multi-step research and returns a deeper, structured, <b>sourced</b> report. Call out the
+contrast so the room knows when to reach for Chat vs Researcher.</div>
+<h3>Step 4 &mdash; talk through it while it runs</h3>
+<p>While Researcher works, discuss how it reasons &mdash; multiple models weighing in (Model Council) and
+critiquing each other's drafts (Model Critique) to produce a more reliable, sourced report. Tie it back to
+the quick Chat answer: that added depth and sourcing is what the extra time buys.</p>
+<div class="kick">Leave this running. We'll come back to the finished report in the Word segment. A pre-baked
+backup report is on the SharePoint site in case the live run is slow.</div>
+<div class="file"><span>&#128196;</span><div><b>Backup:</b> ONEOK_Researcher_Report_NGL_Export_Outlook.docx
+(Backups folder) &mdash; drop in only if live generation stalls.</div></div>
+</div>
+</details>
+
+<!-- 4 -->
+<details class="section" id="s4">
+<summary>4. Outlook <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Use Copilot for the three things executives do most in email: find time, get the gist of a long thread,
+and draft well &mdash; in your voice.</p>
+<h3>Find time</h3>
+<pre>Find a 30-minute slot to meet with my direct reports before next Tuesday, and propose the best option.</pre>
+<div class="outcome">Expected: Copilot reads availability and proposes concrete times.</div>
+<h3>Summarize a long thread</h3>
+<div class="file"><span>&#128196;</span><div><b>Open the conversation in your inbox:</b>
+<i>"West Texas NGL Pipeline Phase 2 - capex variance &amp; Texas City export timing"</i> (5-message thread).</div></div>
+<pre>Summarize this thread. What's the decision being asked for, what are the options, and who recommends what?</pre>
+<div class="outcome">Expected: a tight summary &mdash; $55MM Phase 2 overrun, three options, asset team recommends
+absorbing the overrun to protect the 740 kbpd capacity and the 2028 Texas City export commitments.</div>
+<h3>Draft a reply &mdash; and tune the tone</h3>
+<div class="file"><span>&#128196;</span><div><b>Open the email in your inbox:</b>
+<i>"Decision needed by Friday: reallocate $40MM to lock Texas City firm capacity terms"</i>.</div></div>
+<div class="note"><b>First, switch Copilot to a mode that allows actions.</b> Before drafting, make sure
+Outlook's Copilot is set to the mode that lets it take actions on your message &mdash; not just answer
+questions. If it's in a read-only/ask mode, it won't actually draft or edit the reply for you. Set this once
+and it applies for the rest of the Outlook exercises.</div>
+<pre>Draft a reply approving the $40MM reallocation but asking for the 2028 supply-gap numbers before it goes to the June 18 board review. Keep it warm but decisive.</pre>
+<p>Then show how <b>custom Outlook coaching/instructions</b> change the voice. Set your drafting instructions
+once, then regenerate and compare the two drafts side by side.</p>
+<p style="margin:10px 0 4px;"><span class="tag example">EXAMPLE &middot; BLAKE'S OWN SETTINGS</span>
+The instructions below are Blake's personal writing-style settings, left here for reference. Use them as a
+starting point and adapt to your own voice.</p>
+<pre>My writing style:
+- Write in a professional, confident, and direct tone
+- Keep emails concise and easy to scan
+- Use short paragraphs and bullet points when helpful
+- Prefer plain English over corporate jargon
+- Be factual, neutral, and solution oriented
+- Clearly state the purpose and any required next steps
+- Ask clarifying questions when needed to drive alignment
+- Optimize for executive and customer audiences
+- Avoid emojis and em dashes
+- Do not add unnecessary context or filler</pre>
+<p>With that set, regenerate the reply:</p>
+<pre>Rewrite that reply using my writing-style instructions.</pre>
+<div class="outcome">Expected: visibly different tone between the default draft and the instruction-tuned draft
+&mdash; same content, executive voice.</div>
+</div>
+</details>
+
+<!-- 5 -->
+<details class="section" id="s5">
+<summary>5. Teams &mdash; Intelligent Recap <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Use Copilot in Teams and Intelligent Recap to catch up on a meeting you missed or joined late, and to ask
+what was discussed, what was decided, and what you now own &mdash; without watching the whole recording.</p>
+<div class="note"><b>Setup:</b> this works on a Teams meeting that was <b>recorded and transcribed</b>. Use one
+of your own recent recorded meetings, or follow along on the facilitator's screen.</div>
+<h3>Joined late? Catch up live with Copilot in the meeting</h3>
+<p>If you drop into a meeting that's already underway, open <b>Copilot</b> in the meeting window and ask:</p>
+<pre>Recap what I've missed so far in this meeting.</pre>
+<pre>What decisions have been made, and what questions are still open?</pre>
+<div class="outcome">Expected: a quick catch-up on what's happened so far and where the discussion stands, so you
+can jump in without interrupting to ask.</div>
+<h3>Missed it entirely? Ask Intelligent Recap after the meeting</h3>
+<p>Open the meeting's <b>Recap</b> tab (AI notes, transcript, recording, and chapters) and query it:</p>
+<pre>Summarize this meeting and list the action items with their owners.</pre>
+<pre>What was decided, and were there any disagreements or open risks?</pre>
+<pre>Did anyone mention the West Texas NGL Pipeline budget? What was said, and by whom?</pre>
+<div class="outcome">Expected: a structured summary, decisions, and action items with owners, plus targeted answers
+with speaker attribution and timestamps &mdash; so missing a meeting or joining late doesn't mean losing the
+thread.</div>
+</div>
+</details>
+
+<!-- 6 -->
+<details class="section" id="s6">
+<summary>6. Analyst + Copilot in Excel <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Move from documents to data. Use the Analyst agent to find cross-dataset insight, then use Copilot inside
+Excel for executive-level work &mdash; insights, highlighting, light calculation, summary.</p>
+<h3>Analyst &mdash; insight across related datasets</h3>
+<div class="file"><span>&#128202;</span><div><b>Add all four files to Analyst</b> (Analyst Exercise folder):
+<b>ONEOK_Facility_Performance.xlsx</b>, <b>ONEOK_Throughput_Monthly.xlsx</b>,
+<b>ONEOK_Operating_Costs_Downtime.xlsx</b>, and <b>ONEOK_Integrity_HSE_Events.xlsx</b> &mdash; four related
+datasets that share region and date keys, so Analyst has to reason across separate files.</div></div>
+<pre>Analyze these four files together. Start with a brief executive summary (2-3 sentences) at the top, then answer: which region is delivering the best capital efficiency, and is there any link between downtime or integrity/HSE events and throughput or revenue? Show your reasoning.</pre>
+<pre>Which facilities are the top and bottom performers on throughput per dollar of capex, and what stands out?</pre>
+<div class="outcome">Expected: Analyst joins the four files on region/date and connects them &mdash; e.g., downtime
+and deferred volume tied to fee-revenue impact by region &mdash; and shows the steps it took. This is the
+point: it reasons across separate files, not just one workbook.</div>
+<h3>Copilot in Excel &mdash; Chat, Plan, and Allow-edits</h3>
+<div class="file"><span>&#128202;</span><div><b>Open in Excel:</b> <b>ONEOK_2026_Capital_Program.xlsx</b>
+(Excel Exercise folder).</div></div>
+<p style="margin:8px 0 2px;"><b>Chat</b> &mdash; ask for insight without changing the sheet:</p>
+<pre>Which projects have the highest IRR, and which are over budget? Summarize the program by segment.</pre>
+<p style="margin:8px 0 2px;"><b>Plan</b> &mdash; ask for a multi-step change and watch Copilot lay out its plan
+before it edits the sheet:</p>
+<pre>I want to add a new column that shows the capex per kbpd of capacity added and another that shows fee uplift per dollar of capex.</pre>
+<p style="margin:8px 0 2px;"><b>Allow edits</b> &mdash; let Copilot make the change directly in the sheet:</p>
+<pre>Highlight every project where Capex exceeds Budget in yellow, and add a one-line takeaway at the top.</pre>
+<div class="outcome">Expected: show the three modes &mdash; <b>Chat</b> (ask/insight), <b>Plan</b> (Copilot proposes
+the steps), and <b>Allow editing</b> (Copilot makes the change in the sheet). Keep it executive: insight,
+highlight, summarize, light calc &mdash; not building from scratch.</div>
+</div>
+</details>
+
+<!-- 6 -->
+<details class="section" id="s7">
+<summary>7. Word <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Bring the Researcher report into Word and work it like an executive: get the summary and make tracked
+edits with Copilot. Then do a policy review &mdash; compare a draft integrity &amp; HSE standard to the one
+in force.</p>
+<h3>The Researcher report</h3>
+<p>Open the report Researcher produced (or the backup). Show the <b>summary at the top</b> of the document so
+an executive gets the gist before reading.</p>
+<div class="file"><span>&#128196;</span><div><b>Backup:</b>
+ONEOK_Researcher_Report_NGL_Export_Outlook.docx (Backups folder).</div></div>
+<h3>Tracked edits with Copilot</h3>
+<ol class="steps">
+<li>Turn on <b>Track Changes</b>.</li>
+<li>Ask Copilot to make the edits so the changes are visible and reviewable:</li>
+</ol>
+<pre>Add a concise, three-sentence executive summary at the very top aimed at a CFO.</pre>
+<pre>Make the "Implications for Capital Allocation" section tighter and more decisive.</pre>
+<div class="outcome">Expected: edits appear as tracked changes you can accept or reject. Save the edited report
+&mdash; we'll use it to build the deck.</div>
+<h3>Policy review &mdash; compare integrity/HSE standards</h3>
+<div class="file"><span>&#128196;</span><div><b>Open:</b> <b>ONEOK_Pipeline_Integrity_HSE_Standard_Draft_v4.docx</b>
+and <b>ONEOK_Pipeline_Integrity_HSE_Standard_v3.docx</b> (Word Exercise folder).</div></div>
+<pre>Compare this draft integrity &amp; HSE standard (v4) to the current standard (v3). List any conflicts, weakened controls, or requirements that were dropped, and the significance of the change.</pre>
+<pre>Based on common midstream / pipeline-safety (PHMSA) practice, what important elements is this draft missing that we should consider adding?</pre>
+<div class="outcome">Expected: Copilot surfaces the planted differences &mdash; e.g., a longer ILI interval,
+slower leak-repair window, higher release-reporting threshold, annual vs. semi-annual drills, dropped Control
+Room Management, Stop-Work, and Public Awareness language &mdash; and suggests additions (Management of Change,
+damage prevention / One-Call, control-room fatigue rules).</div>
+<div class="note">Optional Legal review: open <b>ONEOK_Transportation_Services_Agreement_Excerpt.docx</b> and
+ask Copilot to explain the indemnity and insurance terms in plain language.</div>
+</div>
+</details>
+
+<!-- 7 -->
+<details class="section" id="s8">
+<summary>8. PowerPoint from Word <span class="tag run">KICK OFF &amp; LET IT RUN</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Turn the saved report into a presentation, and show the template-selection moment.</p>
+<ol class="steps">
+<li>In PowerPoint, start a new presentation with Copilot.</li>
+<li>Add the saved Word report as the knowledge source / reference file.</li>
+</ol>
+<pre>Create a presentation based on this Word document. Keep it to an executive length and structure: summary, key findings, risks, and a recommendation.</pre>
+<div class="outcome">Expected: Copilot drafts the deck from the report and (on supported tenants) offers a
+template choice &mdash; pick one to show the branding step.</div>
+<div class="kick">This runs for a few minutes &mdash; move to Notebooks while it generates. A finished backup
+deck is on the SharePoint site if needed.</div>
+<div class="file"><span>&#128202;</span><div><b>Backup:</b> ONEOK_NGL_Export_Outlook_Deck.pptx (Backups folder).</div></div>
+</div>
+</details>
+
+<!-- 8 -->
+<details class="section" id="s9">
+<summary>9. Notebooks <span class="tag core">CORE</span></summary>
+<div class="seg">
+<p class="meta">Objective</p>
+<p>Show why executives like Notebooks: one place for everything on a project, that you can query and keep
+current. Build a notebook from ONEOK's weekly staff reports and the program hub, then interrogate it.</p>
+<div class="file"><span>&#128193;</span><div><b>Add to a new Notebook</b> (Notebook Files folder): the weekly
+Staff Reports, the WTX Pipeline Charter, the Capital &amp; Schedule Tracker, the Risk Register, and the Staff
+Review Deck (the five <b>ONEOK_*</b> files).</div></div>
+<h3>Set the notebook's Instructions</h3>
+<p>Once the notebook is created, open its <b>Instructions</b> and paste a set so every answer comes back in
+the same executive shape. Example for this hub:</p>
+<pre>You are a program assistant for the West Texas NGL Pipeline Expansion and ONEOK's weekly staff reports. Use only the files in this notebook as your source.
+- Lead with the bottom line. Keep answers concise and executive-level, in short bullets.
+- When I ask about status, reconcile the weekly staff reports against the capital tracker and the risk register. If the sources disagree (for example, the staff reports say "green" but the tracker shows a budget variance), call out the discrepancy explicitly instead of averaging it.
+- Always surface: overall status, any budget or schedule variance, the key decision needed, and the top open risks.
+- Quantify where you can (dollar variance, kbpd, dates), and flag anything that puts the 2028 Texas City LPG export commitments at risk.
+- Cite which document each point comes from.
+- If something isn't in the notebook, say so instead of guessing.</pre>
+<p>Then run the queries and notice how the answers come back structured and reconciled:</p>
+<pre>Based on everything in this notebook, is the West Texas NGL Pipeline program on track? Be specific.</pre>
+<pre>The weekly staff reports say "green." Do the capital tracker and risk register agree? Where's the tension?</pre>
+<pre>Draft a half-page leadership update with the current status, the key decision, and the risks.</pre>
+<div class="outcome">Expected: the notebook reconciles sources and surfaces the planted tension &mdash; the staff
+reports read "green" while the tracker shows Phase 2 over budget and the risk register flags the 2028 Texas
+City export exposure and the integration-synergy shortfall. A clear illustration of "one grounded place for
+the whole program."</div>
+<div class="note"><b>Staff Reports use case:</b> this is exactly the weekly staff-report pattern &mdash; each
+team drops its weekly into one notebook, and leadership queries the whole picture and sees updates in one
+place instead of reading six separate emails.</div>
+<div class="note"><b>Sharing:</b> you can share a notebook with collaborators so the whole team works from the
+same grounded source. Heads-up: sharing the notebook also shares access to the files added as its sources, so
+only add content your collaborators are cleared to see.</div>
+</div>
+</details>
+
+<!-- 9 -->
+<details class="section" id="s10">
+<summary>10. Create agent &mdash; images / video <span class="tag stretch">STRETCH</span></summary>
+<div class="seg">
+<p class="meta">Objective (only if ahead of pace, while the deck generates)</p>
+<p>Show the Create agent in the Copilot app for generating an image or short video to drop into a deck.</p>
+<pre>Create a clean, professional title image for a presentation on Gulf Coast NGL and LPG export demand, suitable as a slide background.</pre>
+<div class="outcome">Expected: a generated visual the user could place on a slide. Keep it brief &mdash; this is
+a "you can also do this" moment, not a core exercise.</div>
+</div>
+</details>
+
+<!-- 10 -->
+<details class="section" id="s11">
+<summary>11. Agent Builder <span class="tag stretch">STRETCH</span></summary>
+<div class="seg">
+<p class="meta">Objective (close-out / if time)</p>
+<p>Show that anyone can build a custom agent grounded in a single source &mdash; here, the demo SharePoint
+site &mdash; and that Chat can help write the agent's instructions and starter prompts.</p>
+<div class="file"><span>&#128193;</span><div><b>Knowledge source:</b> the demo SharePoint site (the six
+<b>ONEOK_*</b> reference files in the Agent Builder folder: Field HSE &amp; Integrity quick reference,
+Delegation of Authority, Field Policy, Digital Tools, Approved Vendors, Compliance Calendar).</div></div>
+<h3>Configure the Knowledge</h3>
+<ol class="steps">
+<li>Under <b>Knowledge</b>, add a source and choose <b>SharePoint / OneDrive</b>.</li>
+<li>Paste the demo site's URL (or the specific document library) so all six reference files are in scope.</li>
+<li>Scope the agent to <b>this source only</b> &mdash; turn off web search and general/world knowledge so it
+answers <i>only</i> from the site, with citations.</li>
+<li>Give the source a clear name (e.g., "ONEOK Field &amp; Operations Reference").</li>
+</ol>
+<div class="note"><b>Facilitator:</b> exact labels vary by build &mdash; the goal is one knowledge source (the
+SharePoint site), with web and general knowledge turned off, so every answer stays grounded and citeable to
+the site.</div>
+<h3>Let Chat write the instructions</h3>
+<pre>Help me write the instructions and four suggested starter prompts for a custom agent that answers ONEOK field and operations questions using only our internal reference site as its source. It should be accurate, cite the document it used, and say so when the answer isn't in the source.</pre>
+<h3>Test prompts once it's built</h3>
+<pre>What is the approval threshold for a $4 million capital expenditure?</pre>
+<pre>What PPE is required on an operated site, and when is the next pipeline integrity report due?</pre>
+<div class="outcome">Expected: the agent answers from the site only and cites which document it used &mdash; the
+pattern for safe, grounded, role-specific assistants.</div>
+</div>
+</details>
+
+<!-- 11 -->
+<details class="section" id="s12">
+<summary>12. Close</summary>
+<div class="seg">
+<p>Land three habits attendees can start immediately:</p>
+<ol class="steps">
+<li><b>Set your Memory</b> so Copilot answers in your voice everywhere.</li>
+<li><b>Summarize before you read</b> &mdash; long threads, reports, and meetings.</li>
+<li><b>Pick one recurring deliverable</b> (a weekly staff report, a policy review, a board summary) and let
+Copilot draft the first version.</li>
+</ol>
+<h3>When to reach for Copilot vs do it yourself</h3>
+<div class="note"><b>Reach for Copilot when</b>
+<ul>
+<li>You're starting from a blank slate and need help getting started.</li>
+<li>You're looking for hard-to-find information or need to collate information quickly from different sources.</li>
+<li>You need help condensing something long (a thread, a transcript, or a dataset) into a digestible format.</li>
+<li>You're catching up on what you missed.</li>
+<li>You're doing repetitive or formulaic work.</li>
+<li>You're interested in learning about new concepts or topics at your own pace.</li>
+<li>Use it as a thinking partner to pressure-test an idea, challenge your assumptions, or sharpen a vision or message before you commit.</li>
+</ul>
+<b>Stay hands-on</b> when it's a judgment call, it's high-stakes or customer / board / regulator-facing, or it's something you can finish in seconds yourself.<br>
+<b>Always:</b> Copilot drafts and summarizes; <i>you</i> review and own the final version. Use it to get to 80% faster, and spend your time on the 20% that needs your expertise.</div>
+</div>
+</details>
+
+<footer>
+ONEOK &mdash; Executive Copilot Immersion &middot; June 2026 &middot; Facilitated by Blake Jones, Microsoft.
+Demonstration content; all data fictional.
+</footer>
+</div>
+
+<script>
+function setAll(open){document.querySelectorAll('details.section').forEach(function(d){d.open=open;});}
+function openHash(){var h=location.hash;if(!h)return;var el=document.querySelector(h);
+  if(el&&el.tagName==='DETAILS'){el.open=true;el.scrollIntoView();}}
+window.addEventListener('hashchange',openHash);
+window.addEventListener('load',openHash);
+window.addEventListener('beforeprint',function(){setAll(true);});
+</script>
+<script>
+(function(){
+  function makeBtn(){
+    var b=document.createElement('button');
+    b.className='copy-btn'; b.type='button';
+    b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg><span>Copy</span>';
+    return b;
+  }
+  function flash(btn){
+    btn.classList.add('copied'); btn.querySelector('span').textContent='Copied';
+    setTimeout(function(){ btn.classList.remove('copied'); btn.querySelector('span').textContent='Copy'; }, 1500);
+  }
+  function fallback(text, btn){
+    var ta=document.createElement('textarea'); ta.value=text;
+    ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); flash(btn); }catch(e){} document.body.removeChild(ta);
+  }
+  function copy(text, btn){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ flash(btn); }, function(){ fallback(text, btn); });
+    } else { fallback(text, btn); }
+  }
+  window.addEventListener('load', function(){
+    document.querySelectorAll('pre').forEach(function(pre){
+      var text=pre.textContent;
+      var btn=makeBtn();
+      btn.addEventListener('click', function(e){ e.preventDefault(); copy(text, btn); });
+      pre.appendChild(btn);
+    });
+  });
+})();
+</script>
+</body>
+</html>
