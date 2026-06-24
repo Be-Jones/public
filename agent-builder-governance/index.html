@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="A comprehensive governance reference for Microsoft 365 Copilot Agent Builder: how Microsoft 365 Copilot admins control who can build, share, track, and use agents, identify risk, and govern connectors and knowledge sources.">
+<title>Governing Agent Builder - A Microsoft 365 Admin Reference</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --surface-2: #eef2f8;
+    --ink: #1a2230;
+    --ink-soft: #44506a;
+    --ink-faint: #6b7790;
+    --brand: #0f6cbd;
+    --brand-deep: #084d87;
+    --brand-tint: #e7f1fb;
+    --accent: #8a3ffc;
+    --line: #dde3ee;
+    --line-soft: #e9eef6;
+    --ok: #0f7b41;
+    --ok-tint: #e4f4ea;
+    --warn: #9a6300;
+    --warn-tint: #fbf0d8;
+    --risk: #b3261e;
+    --risk-tint: #fbe4e2;
+    --code-bg: #0f1729;
+    --code-ink: #dbe6ff;
+    --shadow: 0 1px 2px rgba(20,30,55,.06), 0 8px 28px rgba(20,30,55,.07);
+    --radius: 14px;
+    --maxw: 1080px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1018;
+      --surface: #141a26;
+      --surface-2: #1b2230;
+      --ink: #e9eef7;
+      --ink-soft: #b6c0d4;
+      --ink-faint: #8a96ac;
+      --brand: #4aa3e8;
+      --brand-deep: #93c6f0;
+      --brand-tint: #14283d;
+      --accent: #b08cff;
+      --line: #283246;
+      --line-soft: #222b3c;
+      --brand-tint: #122639;
+      --ok: #57c98a; --ok-tint: #122a1d;
+      --warn: #e0b25a; --warn-tint: #2c2412;
+      --risk: #ec7a73; --risk-tint: #2e1714;
+      --code-bg: #060a13;
+      --code-ink: #cfe0ff;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.45);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: 22px; }
+
+  /* Hero */
+  header.hero {
+    background:
+      radial-gradient(1200px 380px at 88% -8%, rgba(138,63,252,.20), transparent 60%),
+      radial-gradient(900px 360px at 6% 0%, rgba(15,108,189,.30), transparent 58%),
+      linear-gradient(135deg, var(--brand-deep), #0a3f72 60%, #0c2c55);
+    color: #fff;
+    padding-block: 58px 46px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: .14em; font-size: 12px; font-weight: 700;
+    color: #bcd9f5; margin: 0 0 14px;
+  }
+  header.hero h1 {
+    font-size: clamp(28px, 4.6vw, 46px); line-height: 1.08; margin: 0 0 16px; font-weight: 800;
+    letter-spacing: -.01em;
+  }
+  header.hero p.lede { font-size: clamp(16px, 2vw, 19px); color: #e6f0fb; max-width: 760px; margin: 0; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+    color: #eaf3fc; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+  }
+  .chip b { font-weight: 800; color: #fff; }
+
+  /* Layout */
+  main { padding-block: 8px 40px; }
+  .grid { display: grid; grid-template-columns: 252px 1fr; gap: 34px; align-items: start; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+  nav.toc {
+    position: sticky; top: 18px; align-self: start;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 16px; box-shadow: var(--shadow); font-size: 14px;
+  }
+  @media (max-width: 880px) { nav.toc { position: static; } }
+  nav.toc h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--ink-faint); margin: 2px 0 12px; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+  nav.toc li { margin: 0 0 2px; }
+  nav.toc a {
+    display: block; padding: 6px 10px; border-radius: 8px; color: var(--ink-soft); font-weight: 600;
+    border-inline-start: 2px solid transparent;
+  }
+  nav.toc a:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; border-inline-start-color: var(--brand); }
+  nav.toc a .num { color: var(--brand); font-weight: 800; margin-inline-end: 8px; }
+  nav.toc .toc-sub a { font-weight: 500; font-size: 13px; color: var(--ink-faint); padding-block: 4px; }
+
+  article { min-width: 0; }
+  section { scroll-margin-top: 16px; margin-bottom: 30px; }
+  section.card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 28px 30px; box-shadow: var(--shadow);
+  }
+  @media (max-width: 520px) { section.card { padding: 22px 18px; } }
+
+  h2.sec { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--brand); margin: 0 0 6px; }
+  h3.title { font-size: clamp(21px, 3vw, 27px); line-height: 1.18; margin: 0 0 14px; letter-spacing: -.01em; font-weight: 800; }
+  h4 { font-size: 16px; margin: 22px 0 8px; font-weight: 800; color: var(--ink); }
+  p { margin: 0 0 14px; color: var(--ink-soft); }
+  article p strong, li strong { color: var(--ink); }
+  ul, ol.body { margin: 0 0 14px; padding-inline-start: 22px; color: var(--ink-soft); }
+  li { margin: 0 0 7px; }
+
+  .dim-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+  .dim-badge {
+    flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--brand), var(--accent)); color: #fff; font-weight: 800; font-size: 19px;
+  }
+
+  /* Collapsible dimensions */
+  details.dim { margin: 0; }
+  .dim-summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px;
+    margin: 0; padding: 2px 0; border-radius: 10px;
+  }
+  .dim-summary::-webkit-details-marker { display: none; }
+  .dim-summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+  .dim-sum-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .dim-eyebrow { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--brand); }
+  .dim-sum-title { font-size: clamp(20px, 3vw, 26px); line-height: 1.16; font-weight: 800; letter-spacing: -.01em; color: var(--ink); }
+  .dim-chevron {
+    margin-inline-start: auto; flex: none; width: 11px; height: 11px;
+    border-inline-end: 2px solid var(--ink-faint); border-block-end: 2px solid var(--ink-faint);
+    transform: rotate(45deg); transition: transform .2s ease; margin-block-end: 4px;
+  }
+  details.dim[open] > .dim-summary .dim-chevron { transform: rotate(-135deg); margin-block-end: 0; margin-block-start: 4px; }
+  .dim-summary:hover .dim-sum-title { color: var(--brand-deep); }
+  .dim-summary:hover .dim-chevron { border-color: var(--brand); }
+  details.dim > .dim-summary + * { margin-top: 16px; }
+
+  /* Tables */
+  .tbl-scroll { overflow-x: auto; margin: 6px 0 16px; border: 1px solid var(--line); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  thead th {
+    text-align: start; background: var(--surface-2); color: var(--ink); font-weight: 800;
+    padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap;
+  }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); color: var(--ink-soft); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surface-2) 45%, transparent); }
+
+  /* Callouts */
+  .note { border-radius: 12px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--surface-2); }
+  .note .lbl { font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: 4px; }
+  .note p:last-child { margin-bottom: 0; }
+  .note.info { background: var(--brand-tint); border-color: color-mix(in srgb, var(--brand) 30%, var(--line)); }
+  .note.info .lbl { color: var(--brand-deep); }
+  .note.ok { background: var(--ok-tint); border-color: color-mix(in srgb, var(--ok) 30%, var(--line)); }
+  .note.ok .lbl { color: var(--ok); }
+  .note.warn { background: var(--warn-tint); border-color: color-mix(in srgb, var(--warn) 35%, var(--line)); }
+  .note.warn .lbl { color: var(--warn); }
+  .note.risk { background: var(--risk-tint); border-color: color-mix(in srgb, var(--risk) 35%, var(--line)); }
+  .note.risk .lbl { color: var(--risk); }
+
+  /* Guardrails box - by-design constraints */
+  .guardrails {
+    margin: 20px 0 6px; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--ok) 34%, var(--line));
+    background: var(--ok-tint);
+  }
+  .guardrails .gr-head {
+    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: color-mix(in srgb, var(--ok) 16%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--ok) 28%, var(--line));
+  }
+  .guardrails .gr-shield {
+    flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
+    background: var(--ok); color: #fff; font-size: 18px; font-weight: 800;
+  }
+  .guardrails .gr-head b { font-size: 16px; color: var(--ink); }
+  .guardrails .gr-head span { display: block; font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+  .guardrails ul { list-style: none; margin: 0; padding: 14px 18px 16px; }
+  .guardrails li {
+    position: relative; padding-inline-start: 30px; margin: 0 0 11px; color: var(--ink-soft);
+  }
+  .guardrails li:last-child { margin-bottom: 0; }
+  .guardrails li::before {
+    content: "✕"; position: absolute; inset-inline-start: 0; top: 1px;
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    background: color-mix(in srgb, var(--risk) 18%, transparent); color: var(--risk);
+    font-size: 11px; font-weight: 800;
+  }
+  .guardrails li.allow::before { content: "✓"; background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+  .guardrails li.warn::before { content: "⚠"; background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn); border-radius: 4px; }
+  .guardrails li b { color: var(--ink); }
+
+  /* Nav path / kbd */
+  .path { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 2px 0; }
+  kbd {
+    font: 600 13px/1.4 "SF Mono", "Cascadia Code", Consolas, monospace;
+    background: var(--code-bg); color: var(--code-ink); padding: 3px 8px; border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.08); white-space: nowrap;
+  }
+  .path .arr { color: var(--ink-faint); font-weight: 800; }
+
+  .pill {
+    display: inline-block; font-size: 11.5px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+    padding: 2px 9px; border-radius: 999px; vertical-align: middle;
+  }
+  .pill.high { background: var(--ok-tint); color: var(--ok); }
+  .pill.mod { background: var(--warn-tint); color: var(--warn); }
+  .pill.prev { background: var(--brand-tint); color: var(--brand-deep); }
+
+  sup.cite { font-size: .72em; font-weight: 800; line-height: 0; }
+  sup.cite a { padding: 0 1px; }
+
+  /* Definition cards for quick takeaways */
+  .takeaway {
+    display: grid; gap: 8px; grid-template-columns: 1fr; margin: 10px 0 4px;
+    border-inline-start: 3px solid var(--brand); padding: 10px 0 2px 16px;
+  }
+  .takeaway b { color: var(--ink); }
+
+  /* Sources */
+  ol.sources { padding-inline-start: 20px; font-size: 14.5px; }
+  ol.sources li { margin-bottom: 9px; color: var(--ink-soft); }
+  ol.sources li a { word-break: break-word; }
+
+  footer.foot {
+    border-top: 1px solid var(--line); margin-top: 10px; padding-block: 26px 50px; color: var(--ink-faint); font-size: 13.5px;
+  }
+  footer.foot strong { color: var(--ink-soft); }
+
+  .backtop { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 700; }
+
+  @media print {
+    header.hero { background: #0a3f72 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    nav.toc { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    section.card { box-shadow: none; border-color: #ccc; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Microsoft 365 Copilot · Admin Governance Reference</p>
+    <h1>Governing Agent Builder</h1>
+    <p class="lede">A field guide for Microsoft 365 Copilot administrators: a summary of considerations and controls available to manage your M365 Copilot Agent Builder environment.</p>
+    <div class="hero-meta">
+      <span class="chip">Current as of <b>June 2026</b></span>
+      <span class="chip">Scope: <b>Declarative agents (Agent Builder)</b></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>On this page</h2>
+      <ol>
+        <li><a href="#scope"><span class="num">·</span>Agent Builder Overview</a></li>
+        <li><a href="#portals"><span class="num">·</span>Portals &amp; roles at a glance</a></li>
+        <li><a href="#d1"><span class="num">1</span>Who can build</a></li>
+        <li><a href="#d2"><span class="num">2</span>How agents are shared</a></li>
+        <li><a href="#d3"><span class="num">3</span>Tracking &amp; managing</a></li>
+        <li><a href="#d4"><span class="num">4</span>Identifying risky agents</a></li>
+        <li><a href="#d5"><span class="num">5</span>Connectors &amp; knowledge</a></li>
+        <li><a href="#d6"><span class="num">6</span>Who can use agents</a></li>
+        <li><a href="#sources"><span class="num">·</span>Sources</a></li>
+      </ol>
+    </nav>
+
+    <article>
+
+      <!-- SCOPE -->
+      <section id="scope" class="card">
+        <h2 class="sec">Start here</h2>
+        <h3 class="title">Agent Builder: intrinsically secure</h3>
+        <p><strong>Agent Builder</strong> - also called the <em>Copilot Studio agent builder</em> or the <em>declarative agent builder</em> - is the lightweight, no-code experience embedded directly in Microsoft 365 Copilot for building declarative agents.<sup class="cite"><a href="#ref-1">1</a></sup> It is reachable from <kbd>microsoft365.com/chat</kbd>, <kbd>office.com/chat</kbd>, and the Microsoft 365 Copilot app in Teams desktop and web (both the Work and Web toolbars), and is <strong>not available on mobile</strong>.<sup class="cite"><a href="#ref-1">1</a></sup></p>
+        <p>The agents it produces are <strong>declarative agents</strong>: customized versions of Copilot with their own instructions, knowledge, and conversation starters, running on the same Copilot infrastructure. Microsoft draws a hard boundary with full Copilot Studio - <em>"If you need more advanced capabilities like Actions to integrate external services, use Microsoft Copilot Studio."</em> Those advanced capabilities are a separate product; everything in this guide concerns the declarative agents built in Agent Builder, which are governed entirely through Microsoft 365 admin controls.<sup class="cite"><a href="#ref-1">1</a></sup></p>
+
+        <div class="guardrails">
+          <div class="gr-head">
+            <span class="gr-shield" aria-hidden="true">🛡</span>
+            <div><b>Built-in guardrails - what Agent Builder agents can't do, by design</b><span>These constraints are inherent to the declarative agent model. They hold regardless of how an agent is configured or who it's shared with.</span></div>
+          </div>
+          <ul>
+            <li><b>No autonomous operation.</b> An agent only acts in direct response to a user's prompt in a chat - it never runs on its own initiative or in the background.</li>
+            <li><b>No event triggers.</b> Agents cannot be started by an event, a schedule, a webhook, or any external signal. There is no trigger surface to govern.</li>
+            <li><b>Read-only by nature.</b> They cannot edit, create, or delete existing files or data in any system. They retrieve and generate responses and can create new file artifacts, but they do not make updates to existing data.</li>
+            <li class="allow"><b>Admin-allowed data sources only.</b> An agent can connect only to the data sources the Microsoft 365 admin has explicitly enabled - connectors, knowledge sources, and grounding are all gated by tenant policy (see Dimension 5).</li>
+            <li class="allow"><b>Always the end user's permissions.</b> Every response is constrained to what the signed-in user is already permitted to access. An agent can never surface data the person running it couldn't reach themselves (see Dimension 2).</li>
+            <li class="warn">If you want to build an agent that operates autonomously, is triggered by an event, or writes to external systems, you need full Copilot Studio.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- PORTALS & ROLES -->
+      <section id="portals" class="card">
+        <h2 class="sec">Quick reference</h2>
+        <h3 class="title">Admin centers, portals &amp; roles</h3>
+        <p>Agent Builder governance is spread across several portals, but primarily focused with the M365 Admin Center:</p>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Portal</th><th>URL</th><th>Primary Agent Builder governance role</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Microsoft 365 admin center</strong> (MAC)</td><td><kbd>admin.microsoft.com</kbd></td><td>Build/use access, sharing controls, agent registry, lifecycle, approvals, connector enablement</td></tr>
+              <tr><td><strong>Microsoft Purview portal</strong></td><td><kbd>purview.microsoft.com</kbd></td><td>DSPM for AI, DLP for Copilot, audit, eDiscovery, communication compliance, retention</td></tr>
+              <tr><td><strong>SharePoint admin center</strong></td><td><kbd>&lt;tenant&gt;-admin.sharepoint.com</kbd></td><td>Restricted Content Discovery, Restricted SharePoint Search, Data Access Governance</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Roles authorized for agent management</h4>
+        <p>Agent management in the M365 admin center is governed by Microsoft Entra admin roles.<sup class="cite"><a href="#ref-7">7</a></sup></p>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Role</th><th>What it can do</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Global Administrator</strong>, <strong>AI Administrator</strong></td><td>Full: view insights &amp; registry; install, modify, approve, and manage agent configurations. Tenant-wide governance authority.<sup class="cite"><a href="#ref-7">7</a></sup></td></tr>
+              <tr><td><strong>Global Reader</strong>, <strong>AI Reader</strong></td><td>View registry &amp; insights; read-only on tools and settings.<sup class="cite"><a href="#ref-7">7</a></sup></td></tr>
+              <tr><td><strong>Security Admin/Reader</strong>, <strong>Reports Reader</strong>, <strong>User Experience Success Manager</strong></td><td>View insights and registry; no governance actions.<sup class="cite"><a href="#ref-7">7</a></sup></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note ok">
+          <span class="lbl">Least-privilege tip</span>
+          <p>The <strong>AI Administrator</strong> role gives you the same tenant-wide control over agents as Global Administrator, but without all the other permissions a Global Admin carries. Microsoft recommends using it instead wherever you can.<sup class="cite"><a href="#ref-7">7</a></sup></p>
+        </div>
+      </section>
+
+      <!-- D1 -->
+      <section id="d1" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">1</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 1</span><span class="dim-sum-title">Controlling who can build agents</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+        <div class="note ok">
+          <span class="lbl">Usually not worth turning off</span>
+          <p>There's rarely a good reason to turn Agent Builder off. The agents it creates are safe by design: they can't create, update, or delete data, and they only ever return what the signed-in user can already see (see the guardrails at the top of this guide). Because the risk is so low, most tenants are better off limiting who can build - scoping to <em>Specific users / groups</em> - than switching it off entirely.</p>
+        </div>
+        <p><strong>Default state:</strong> Agent Builder is on out of the box - <em>"the capability is enabled by default in all Microsoft 365 Copilot licensed tenants."</em><sup class="cite"><a href="#ref-5">5</a></sup></p>
+
+        <h4>The primary control - User access</h4>
+        <p>A single setting turns the <em>Agents -> Agent Builder</em> entry point on or off and scopes it to specific people. Microsoft maps it explicitly: the control <em>"Allow the following users access to Copilot agents"</em> performs the scenario <em>"Enable or disable the entry point for Agent Builder in Microsoft 365 Copilot (Create an agent)."</em><sup class="cite"><a href="#ref-2">2</a></sup></p>
+        <p class="path"><kbd>Microsoft 365 admin center</kbd><span class="arr">→</span><kbd>Agents</kbd><span class="arr">→</span><kbd>Settings</kbd><span class="arr">→</span><kbd>User access</kbd></p>
+        <p>The setting has three options:<sup class="cite"><a href="#ref-6">6</a></sup></p>
+        <ul>
+          <li><strong>All users</strong> (default) - everyone with a Copilot license can build in Agent Builder.</li>
+          <li><strong>No users</strong> - the Agent Builder entry point is removed tenant-wide.</li>
+          <li><strong>Specific users / groups</strong> - Agent Builder is available only to chosen users or security groups.</li>
+        </ul>
+
+        <div class="note risk">
+          <span class="lbl">Before you turn it off, know what else goes with it</span>
+          <p>If your admin team really does want to remove the capability, the steps above work - just know it takes more than the <em>Create an agent</em> button with it:</p>
+          <ul>
+            <li>Other <strong>custom-built agents</strong> in your tenant also disappear from users' experience.</li>
+            <li>Users will no longer <em>see</em> Microsoft's own agents - <strong>Researcher</strong>, <strong>Analyst</strong>, and the <strong>Office 365 agents</strong> - in the UI, even though they retain the right to use them.</li>
+          </ul>
+          <p>So it's worth thinking through: turning Agent Builder off changes a lot more than just hiding the build button.</p>
+        </div>
+
+        <h4>Restricting which agent <em>types</em> appear</h4>
+        <p>A complementary control limits which categories of agents users can view/install: 
+        <p class="path"><kbd>Microsoft 365 admin center</kbd><span class="arr">→</span><kbd>Agents</kbd><span class="arr">→</span><kbd>Settings</kbd><span class="arr">→</span><kbd>Allowed Agent Types</kbd></p>
+        <p>If you disable a type, those agents don't appear in the Agent store. One nuance: <strong>agents built by Microsoft remain visible even when the setting is disabled - but users won't be able to install or use them.</strong><sup class="cite"><a href="#ref-6">6</a></sup></p>
+
+        <p><strong>Roles required:</strong> Global Administrator or AI Administrator.<sup class="cite"><a href="#ref-7">7</a></sup></p>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- D2 -->
+      <section id="d2" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">2</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 2</span><span class="dim-sum-title">How agents get shared - and how admins govern it</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+
+        <h4>The three sharing scopes a maker sees</h4>
+        <p>After a user clicks the <strong>Create</strong> button on their Agent, <em>"a confirmation message indicates that the agent is private and only available to you."</em><sup class="cite"><a href="#ref-3">3</a></sup> They can then choose:</p>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Scope</th><th>Who can use it</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Only you</strong> (default)</td><td>Only the author can use the agent.<sup class="cite"><a href="#ref-3">3</a></sup></td></tr>
+              <tr><td><strong>Specific users in your organization</strong></td><td>Named individuals, security groups, security-enabled M365 groups, or teams via a sharing link. Sharing to a team can post a discovery notification to its home channel.<sup class="cite"><a href="#ref-3">3</a></sup></td></tr>
+              <tr><td><strong>Anyone in your organization</strong></td><td>Any user in the tenant can use the sharing link.<sup class="cite"><a href="#ref-3">3</a></sup></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Sharing is link-based and grants limited direct access - <em>"sharing an agent doesn't allow for deployment across the organization or integration with other channels."</em> Broad, multi-channel distribution requires Copilot Studio.<sup class="cite"><a href="#ref-3">3</a></sup></p>
+
+        <h4>Admin governance of sharing</h4>
+        <p class="path"><kbd>M365 admin center</kbd><span class="arr">→</span><kbd>Agents</kbd><span class="arr">→</span><kbd>Settings</kbd><span class="arr">→</span><kbd>Sharing</kbd></p>
+        <p>Tenant admins constrain sharing org-wide with the same three-way choice (<strong>All users / No users / Specific users</strong>). Scope matters: <em>"Only agents built with Microsoft 365 Copilot Agent Builder are governed by sharing control."</em><sup class="cite"><a href="#ref-6">6</a></sup> Note that <strong>No users</strong> disables <em>org-wide</em> sharing but <em>"users can still share directly with specific individuals."</em><sup class="cite"><a href="#ref-6">6</a></sup></p>
+
+        <div class="note risk">
+          <span class="lbl">Keep in mind</span>
+          <p><strong>Sharing changes aren't retroactive.</strong> <em>"Changes to admin controls apply only to new sharing actions. Existing shared agents remain accessible unless you manually update the sharing option."</em> When org-wide sharing is disabled, the <em>Anyone in your organization</em> option greys out, and existing owners hit a "Can no longer update agent" error until they pick a compliant scope.<sup class="cite"><a href="#ref-3">3</a></sup></p>
+        </div>
+
+        <h4>Publishing to the org catalog (approval flow)</h4>
+        <p>To make an agent broadly discoverable, a maker can submit it to the org catalog: <em>"An admin reviews the submission in the Microsoft 365 admin center and, if approved, publishes the agent in the Built by your org section of the Agent Store."</em> The shared version and the store version are managed separately.<sup class="cite"><a href="#ref-3">3</a></sup></p>
+
+        <div class="note info">
+          <span class="lbl">SharePoint knowledge respects the end user's permissions</span>
+          <p>When sharing to specific users, SharePoint sources can be auto-shared, but <em>"the agent respects the end user's information and sensitivity privileges"</em> - content a recipient can't access is excluded from responses, and <em>"file sensitivity labels applied to files in SharePoint or OneDrive are respected."</em> Auto-sharing of SharePoint files/folders is supported only when sharing with specific security groups, not with everyone.<sup class="cite"><a href="#ref-3">3</a></sup><sup class="cite"><a href="#ref-1">1</a></sup></p>
+        </div>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- D3 -->
+      <section id="d3" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">3</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 3</span><span class="dim-sum-title">Tracking &amp; managing agents across the tenant</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+
+        <h4>Finding and managing your Agent Builder agents in the registry</h4>
+        <p class="path"><kbd>M365 admin center</kbd><span class="arr">→</span><kbd>Agents</kbd><span class="arr">→</span><kbd>All Agents</kbd><span class="arr">→</span><kbd>Registry</kbd></p>
+        <p>The registry is the inventory for every agent in your tenant, including the ones people build with Agent Builder.<sup class="cite"><a href="#ref-9">9</a></sup> To work with just those, apply the <strong>Platform</strong> filter and set it to <strong>Agent Builder</strong> - the list narrows to your Agent Builder agents, each showing its name, creator, creation date, host products, and availability status.<sup class="cite"><a href="#ref-9">9</a></sup><sup class="cite"><a href="#ref-5">5</a></sup></p>
+        <p><strong>Click any agent</strong> in that filtered list to open its detail view, where you can review its <strong>knowledge source details</strong>, <strong>agent instructions</strong>, <strong>sharing configuration</strong>, and more, so you can see exactly what an agent can reach and who it's shared with. From the list you can also <strong>Export to CSV</strong> to keep an offline inventory.<sup class="cite"><a href="#ref-9">9</a></sup></p>
+        <p>While you're there, the <strong>summary tiles</strong> flag <em>Agents without owners</em> and <em>Unmanaged agents</em>, which point you to the ones that need a new owner or a closer look.<sup class="cite"><a href="#ref-9">9</a></sup></p>
+        <p><strong>Requests tab.</strong> Agents that makers submit to your organization's catalog appear in the <strong>Requests</strong> tab of this screen, where you review them and approve or reject before they're published to the <em>Built by your org</em> store (see Dimension 2).<sup class="cite"><a href="#ref-3">3</a></sup></p>
+
+        <h4>Lifecycle actions</h4>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Action</th><th>Effect</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Publish</strong></td><td>Make an agent available to specific users or groups.</td></tr>
+              <tr><td><strong>Deploy</strong></td><td>Install an agent on behalf of a user by accepting Entra permissions for them.</td></tr>
+              <tr><td><strong>Block</strong></td><td>Prevent any user in the tenant from accessing the agent - used for agents "deemed unsafe or noncompliant."<sup class="cite"><a href="#ref-5">5</a></sup></td></tr>
+              <tr><td><strong>Delete</strong></td><td>Remove the agent from your tenant (custom agents only).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Agent Management Rules - bulk lifecycle <span class="pill prev">2026</span></h4>
+        <p>MAC now offers rules-based bulk governance to <em>"apply governance and lifecycle controls across AI agents at scale."</em> Two scenarios are documented:<sup class="cite"><a href="#ref-6">6</a></sup></p>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Scenario</th><th>Effect</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Install Microsoft Agents</strong></td><td>Bulk-installs Microsoft first-party agents across the tenant.<sup class="cite"><a href="#ref-6">6</a></sup></td></tr>
+              <tr><td><strong>Reassign ownerless agents created with Agent Builder to manager</strong></td><td>Agent-Builder-specific - transfers ownership <em>"to the manager of the previous owner based on Microsoft Entra ID hierarchy."</em><sup class="cite"><a href="#ref-6">6</a></sup></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note info">
+          <span class="lbl">Ownership transfer is an admin-only path</span>
+          <p>Microsoft 365 Copilot <em>"doesn't support transferring ownership of declarative agents"</em> through the maker UI - admin reassignment via Agent Management Rules is the route.<sup class="cite"><a href="#ref-3">3</a></sup></p>
+        </div>
+
+        <h4>Usage &amp; reporting</h4>
+        <p>After selecting an agent in the Registry list, you can view usage specific to the selected agent.</p>
+        <p>Broad usage and adoption signals organization-wide appear in Purview DSPM for AI reports and the Agent overview workload, which provides usage and insights that help monitor agent adoption and governance. If Agent 365 is enabled, additional security detection and reporting is available in Purview as well.<sup class="cite"><a href="#ref-8">8</a></sup><sup class="cite"><a href="#ref-10">10</a></sup></p>
+
+        <div class="note warn">
+          <span class="lbl">Microsoft Agent 365</span>
+          <p><em>Microsoft Agent 365 is the control plane for AI agents and adds additional tools and capability to confidently deploy, govern, and manage all your agents at scale, regardless of where these agents are built or acquired.</em><sup class="cite"><a href="#ref-5">5</a></sup><sup class="cite"><a href="#ref-9">9</a></sup>
+        </div>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- D4 -->
+      <section id="d4" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">4</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 4</span><span class="dim-sum-title">Identifying risky agents</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+        <p>As noted above, Agent Builder agents are inherently low risk due to capability restrictions and intrinsically secure by virtue of inheriting existing M365 permissions to SharePoint, OneDrive and other knowledge sources. However, there are security tools available for proactive and reactive AI agent management.</p>
+        <p> Data risk can be identified and managed through two stacks: <strong>Microsoft Purview</strong> (data security &amp; compliance) and <strong>SharePoint Advanced Management</strong> (oversharing).</p>
+
+        <h4>Microsoft Purview</h4>
+        <p>Purview supports the full compliance toolset against Copilot/agent interactions: DSPM for AI, auditing, data classification, sensitivity labels, DLP, Insider Risk Management, communication compliance, eDiscovery, data lifecycle management, and Compliance Manager.<sup class="cite"><a href="#ref-10">10</a></sup></p>
+        <p class="path"><kbd>Purview portal</kbd><span class="arr">→</span><kbd>Solutions</kbd><span class="arr">→</span><kbd>DSPM for AI</kbd></p>
+        <ul>
+          <li><strong>DSPM for AI</strong> is the best place to start - <em>"discover, secure, and apply compliance controls for AI usage … Data risk assessments help you identify and fix issues that could result in oversharing of data."</em> One-click policies include <em>Detect risky interactions in AI apps</em>, <em>Detect unethical behavior in AI</em>, and <em>Protect items with sensitivity labels from Microsoft 365 Copilot and agent processing</em>. Reports include <em>Potential risky AI usage</em> and <em>Top unethical AI interactions</em>.<sup class="cite"><a href="#ref-10">10</a></sup></li>
+          <li><strong>Audit:</strong> agent prompts and responses are <em>"captured in the unified audit log."</em><sup class="cite"><a href="#ref-10">10</a></sup></li>
+          <li><strong>DLP for Copilot:</strong> the "Microsoft 365 Copilot and Copilot Chat" policy location can <em>"restrict the processing of prompts that contain sensitive information types, or processing files and emails that have specific sensitivity labels."</em><sup class="cite"><a href="#ref-10">10</a></sup></li>
+          <li><strong>Insider Risk Management:</strong> the <em>Risky AI usage</em> template detects <em>"prompt injection attacks and accessing protected materials."</em><sup class="cite"><a href="#ref-10">10</a></sup></li>
+          <li><strong>eDiscovery / retention:</strong> queryable via the <em>Copilot activity</em> condition; retained via the <em>Microsoft Copilot Experiences</em> location.<sup class="cite"><a href="#ref-10">10</a></sup></li>
+        </ul>
+
+        <h4>SharePoint Advanced Management - oversharing controls</h4>
+        <ul>
+          <li><strong>Restricted Content Discovery (RCD):</strong> when enabled for a site, <em>"content from that site doesn't appear in organization-wide search and Microsoft 365 Copilot experiences unless a user recently interacted with the content"</em> - without changing existing permissions. It also <em>"restricts usage of AI-powered features in SharePoint … Users don't see entry points such as the Copilot button, AI actions menus (including creating agents)"</em>, so on sensitive sites RCD also stops people from building agents there.<sup class="cite"><a href="#ref-11">11</a></sup>
+            <p class="path"><kbd>SharePoint admin center</kbd><span class="arr">→</span><kbd>Sites</kbd><span class="arr">→</span><kbd>Active sites</kbd><span class="arr">→</span><kbd>Settings</kbd><span class="arr">→</span><kbd>Restrict content from Microsoft 365 Copilot</kbd></p>
+          </li>
+          <li><strong>Restricted SharePoint Search</strong> interacts directly with Agent Builder: <em>"If Restricted SharePoint Search is enabled, you can't use SharePoint as a knowledge source."</em><sup class="cite"><a href="#ref-4">4</a></sup></li>
+          <li><strong>Supporting tools:</strong> SharePoint Admin Agent, content management assessment, Data Access Governance reports, and catalog management help locate oversharing-prone sites before a Copilot rollout.<sup class="cite"><a href="#ref-12">12</a></sup></li>
+        </ul>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- D5 -->
+      <section id="d5" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">5</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 5</span><span class="dim-sum-title">Governing connectors &amp; knowledge sources</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+
+        <h4>What a maker can add as knowledge</h4>
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr><th>Source</th><th>Limit / note</th></tr></thead>
+            <tbody>
+              <tr><td>Public website URLs</td><td>Up to 4<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+              <tr><td>SharePoint files / folders / sites</td><td>Up to 100 SharePoint files per agent<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+              <tr><td>OneDrive files</td><td>Up to 50<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+              <tr><td>Teams chat URLs</td><td>Up to 5 - requires a Copilot add-on license<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+              <tr><td>Embedded (uploaded) files</td><td>Up to 20<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+              <tr><td>Microsoft 365 Copilot connectors (Graph)</td><td>Only if enabled by an admin<sup class="cite"><a href="#ref-4">4</a></sup></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Graph / Copilot connectors</h4>
+        <p><em>"Admins must enable and configure Copilot connectors in the Microsoft 365 admin center."</em> Depending on the control, connectors are managed from the <strong>Microsoft Entra admin center</strong> and the <strong>Microsoft 365 admin center</strong> - including app registration / admin consent in Entra and enable/disable in MAC. If a scoped attribute doesn't appear, the documented cause is that <em>"your administrator didn't configure the scoped content."</em><sup class="cite"><a href="#ref-2">2</a></sup><sup class="cite"><a href="#ref-4">4</a></sup></p>
+
+        <h4>Web &amp; SharePoint source controls</h4>
+        <ul>
+          <li><strong>Web grounding</strong> is governed by the <em>Allow web search in Copilot</em> policy, which applies tenant-wide and overrides the maker-facing Web content toggle.<sup class="cite"><a href="#ref-1">1</a></sup></li>
+          <li><strong>SharePoint as a source</strong> is disabled wholesale when Restricted SharePoint Search is on.<sup class="cite"><a href="#ref-4">4</a></sup></li>
+          <li><strong>Hard limit:</strong> <em>"Agent Builder … doesn't support blocking general AI knowledge from your agent's responses. For stricter control over knowledge sources, use Copilot Studio."</em><sup class="cite"><a href="#ref-4">4</a></sup></li>
+        </ul>
+
+        <h4>Where source control actually lives</h4>
+        <p>For Agent Builder agents, the available data sources are governed entirely through <strong>Microsoft 365 admin controls</strong>. The three levers are:</p>
+        <ul>
+          <li><strong>Microsoft 365 admin center connector enablement</strong> - a knowledge source (such as a Graph / Copilot connector) is selectable only if an admin has enabled it; if it isn't configured, it doesn't appear to makers.<sup class="cite"><a href="#ref-2">2</a></sup><sup class="cite"><a href="#ref-4">4</a></sup></li>
+          <li>The <strong>"Allow web search in Copilot" policy</strong> - controls web grounding tenant-wide and overrides the maker-facing Web content toggle.<sup class="cite"><a href="#ref-1">1</a></sup></li>
+          <li><strong>Restricted SharePoint Search</strong> - when enabled, SharePoint can't be used as a knowledge source at all.<sup class="cite"><a href="#ref-4">4</a></sup></li>
+        </ul>
+        <div class="note info">
+          <span class="lbl">An agent can never out-reach its user</span>
+          <p>Beyond admin enablement, every source an agent draws on is still bounded by the <strong>signed-in user's own permissions</strong> - an Agent Builder agent cannot surface data the person running it isn't already entitled to see (see the guardrails at the top and Dimension 2).<sup class="cite"><a href="#ref-3">3</a></sup></p>
+        </div>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- D6 -->
+      <section id="d6" class="card">
+        <details class="dim">
+        <summary class="dim-summary"><span class="dim-badge">6</span><span class="dim-sum-text"><span class="dim-eyebrow">Dimension 6</span><span class="dim-sum-title">Controlling who can use agents</span></span><span class="dim-chevron" aria-hidden="true"></span></summary>
+        <p><strong>Audience</strong> is the intersection of two gates: the agent must be shared with the user <em>and</em> the user must fall within the org's User access scope. Capabilities gate further by license: <em>"Users can only add agents that are shared with them when they have the type of Microsoft 365 Copilot license required … attempts to use the agent might result in an error."</em><sup class="cite"><a href="#ref-3">3</a></sup></p>
+
+        <h4>Licensed users - included, no extra setup</h4>
+        <p>For Microsoft 365 Copilot <strong>licensed</strong> users - the primary Agent Builder audience - there's nothing to provision and no consumption based cost - usage of Agent Builder agents comes with Microsoft 365 Copilot licenses.</em> Agents built in Agent Builder are included also do not consume tenant Dataverse storage.<sup class="cite"><a href="#ref-12">12</a></sup><sup class="cite"><a href="#ref-1">1</a></sup></p>
+        <h4>Copilot Chat (free tier) - what's free vs. gated</h4>
+        <p>For users on Copilot <strong>Chat</strong> (the free / unlicensed non-M365 tier), declarative agents that are grounded in instructions and use only public websites are available at no additional cost.<a href="#ref-12">12</a></sup></p>
+        <a class="backtop" href="#scope">↑ Back to top</a>
+        </details>
+      </section>
+
+      <!-- SOURCES -->
+      <section id="sources" class="card">
+        <h2 class="sec">Traceability</h2>
+        <h3 class="title">Sources</h3>
+        <p>Every claim above carries a numbered citation. All sources are official Microsoft Learn documentation.</p>
+        <ol class="sources">
+          <li id="ref-1">Agent Builder in Microsoft 365 Copilot - <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder" rel="noopener">learn.microsoft.com/.../extensibility/agent-builder</a></li>
+          <li id="ref-2">Manage agents for Microsoft 365 Copilot (admin controls by build method) - <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/manage" rel="noopener">learn.microsoft.com/.../extensibility/manage</a></li>
+          <li id="ref-3">Share and manage agents built with Microsoft 365 Copilot - <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder-share-manage-agents" rel="noopener">learn.microsoft.com/.../agent-builder-share-manage-agents</a></li>
+          <li id="ref-4">Add knowledge sources to your declarative agent - <a href="https://learn.microsoft.com/en-us/microsoft-365/copilot/extensibility/agent-builder-add-knowledge" rel="noopener">learn.microsoft.com/.../agent-builder-add-knowledge</a></li>
+          <li id="ref-5">Manage agents in the Microsoft 365 admin center - <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/manage-copilot-agents-integrated-apps?view=o365-worldwide" rel="noopener">learn.microsoft.com/.../manage-copilot-agents-integrated-apps</a></li>
+          <li id="ref-6">Agent settings in the Microsoft 365 admin center - <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-settings?view=o365-worldwide" rel="noopener">learn.microsoft.com/.../agent-settings</a></li>
+          <li id="ref-7">Agent management roles and permissions - <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-roles-perms?view=o365-worldwide" rel="noopener">learn.microsoft.com/.../agent-roles-perms</a></li>
+          <li id="ref-8">Agent management overview (Agent workload / Agent 365 / Frontier) - <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-365-overview?view=o365-worldwide" rel="noopener">learn.microsoft.com/.../agent-365-overview</a></li>
+          <li id="ref-9">Manage the agent registry - <a href="https://learn.microsoft.com/en-us/microsoft-365/admin/manage/agent-registry?view=o365-worldwide" rel="noopener">learn.microsoft.com/.../agent-registry</a></li>
+          <li id="ref-10">Use Microsoft Purview to manage data security &amp; compliance for Microsoft 365 Copilot - <a href="https://learn.microsoft.com/en-us/purview/ai-m365-copilot" rel="noopener">learn.microsoft.com/.../purview/ai-m365-copilot</a></li>
+          <li id="ref-11">Restrict discovery of SharePoint sites and content (Restricted Content Discovery / SAM) - <a href="https://learn.microsoft.com/en-us/sharepoint/restricted-content-discovery" rel="noopener">learn.microsoft.com/.../sharepoint/restricted-content-discovery</a></li>
+          <li id="ref-12">Agents for Microsoft 365 Copilot Chat (free vs. metered consumption) - <a href="https://learn.microsoft.com/en-us/copilot/agents" rel="noopener">learn.microsoft.com/.../copilot/agents</a></li>
+          <li id="ref-13">Microsoft Purview for AI agents (DSPM coverage &amp; the AI Observability / Agent 365 distinction) - <a href="https://learn.microsoft.com/en-us/purview/ai-agents" rel="noopener">learn.microsoft.com/.../purview/ai-agents</a></li>
+          <li id="ref-14">Microsoft Agent 365 overview (control plane &amp; licensing) - <a href="https://learn.microsoft.com/en-us/microsoft-agent-365/overview" rel="noopener">learn.microsoft.com/.../microsoft-agent-365/overview</a></li>
+        </ol>
+      </section>
+
+      <footer class="foot">
+        <p>Valid as of June 2026.</p>
+      </footer>
+
+    </article>
+  </div>
+</main>
+</body>
+</html>
