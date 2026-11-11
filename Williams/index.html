@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Microsoft 365 Copilot: Prompts to Try</title>
+<style>
+:root {
+  --bg:#f5f7fa; --surface:#ffffff; --ink:#1a1a1a; --muted:#4a5563; --accent:#0f5a9e; --accent-ink:#ffffff;
+  --border:#d9dee5; --code-bg:#f0f4f9; --badge:#107c41; --today:#c45500; --today-ink:#ffffff; --shadow:0 1px 3px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#14171c; --surface:#1d2128; --ink:#eef1f5; --muted:#aab3bf; --accent:#4ea1ea; --accent-ink:#0b1420;
+    --border:#323844; --code-bg:#252b34; --badge:#3ccf7e; --today:#ffb366; --today-ink:#1a1a1a; --shadow:none; }
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:"Segoe UI",Calibri,system-ui,-apple-system,sans-serif; line-height:1.55; }
+header { background:var(--accent); color:var(--accent-ink); padding-block:2.25rem 1.75rem; padding-inline:1.25rem; }
+header .wrap, main, footer { max-inline-size:960px; margin-inline:auto; }
+header h1 { margin:0 0 .4rem; font-size:2rem; line-height:1.2; }
+header p { margin:0; font-size:1.05rem; opacity:.95; }
+nav { position:sticky; inset-block-start:0; z-index:5; background:var(--surface); border-block-end:1px solid var(--border); box-shadow:var(--shadow); }
+nav ul { list-style:none; margin:0 auto; padding-block:.5rem; padding-inline:1rem; display:flex; gap:.35rem; overflow-x:auto; max-inline-size:960px; }
+nav a { display:block; white-space:nowrap; padding-block:.35rem; padding-inline:.75rem; border-radius:999px; color:var(--accent); text-decoration:none; font-weight:600; font-size:.9rem; }
+nav a:hover, nav a:focus-visible { background:var(--code-bg); }
+main { padding-block:1.5rem 2rem; padding-inline:1.25rem; }
+.how { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding-block:1rem; padding-inline:1.25rem; margin-block-end:1.5rem; }
+.how h2 { margin-block:0 .5rem; font-size:1.15rem; }
+.how ul { margin:0; padding-inline-start:1.2rem; }
+details.sec { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-block-end:1rem; box-shadow:var(--shadow); scroll-margin-block-start:4rem; }
+details.sec > summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:.75rem; padding-block:.9rem; padding-inline:1.1rem; border-radius:10px; }
+details.sec > summary::-webkit-details-marker { display:none; }
+details.sec > summary::before { content:""; flex-shrink:0; inline-size:.6rem; block-size:.6rem; border-inline-end:2px solid var(--accent); border-block-end:2px solid var(--accent); transform:rotate(-45deg); transition:transform .15s ease; }
+details.sec[open] > summary::before { transform:rotate(45deg); }
+details.sec > summary:hover, details.sec > summary:focus-visible { background:var(--code-bg); }
+details.sec > summary h2 { margin:0; font-size:1.3rem; color:var(--accent); flex:1; }
+.meta { font-size:.85rem; color:var(--muted); white-space:nowrap; }
+.sec-body { padding-block:0 .4rem; padding-inline:1.1rem; }
+.sec-body .card { box-shadow:none; }
+.toolbar { display:flex; gap:.5rem; justify-content:flex-end; margin-block-end:.75rem; }
+.toolbar button { cursor:pointer; border:1px solid var(--accent); background:transparent; color:var(--accent); border-radius:6px; padding-block:.35rem; padding-inline:.9rem; font-weight:600; font-size:.85rem; font-family:inherit; }
+.toolbar button:hover { background:var(--code-bg); }
+.intro { margin-block:0 1rem; color:var(--muted); }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1rem 1.1rem; margin-block-end:.9rem; box-shadow:var(--shadow); }
+.card-head { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-block-end:.6rem; }
+.card h3 { margin:0; font-size:1.05rem; }
+.badge { display:inline-block; margin-inline-start:.5rem; padding-block:.05rem; padding-inline:.5rem; border-radius:4px; background:var(--badge); color:#fff; font-size:.72rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; vertical-align:middle; }
+.badge.today { background:var(--today); color:var(--today-ink); }
+.tag { font-size:.8rem; color:var(--muted); font-weight:600; }
+pre.prompt { margin:0; white-space:pre-wrap; word-wrap:break-word; background:var(--code-bg); border-inline-start:4px solid var(--accent); border-radius:6px; padding:.8rem .95rem; font-family:"Segoe UI",Calibri,system-ui,sans-serif; font-size:.98rem; line-height:1.5; }
+.steps ol { margin:0; padding-inline-start:1.3rem; }
+.steps li { margin-block-end:.25rem; }
+.files { margin-block:.6rem 0; font-size:.88rem; display:flex; flex-wrap:wrap; gap:.35rem .5rem; align-items:baseline; }
+.files span { color:var(--muted); font-weight:600; }
+.files a { color:var(--accent, #0F5A9E); text-decoration:underline; text-underline-offset:2px; }
+.note { margin-block:.6rem 0; font-size:.9rem; color:var(--muted); }
+button.copy { flex-shrink:0; cursor:pointer; border:1px solid var(--accent); background:var(--accent); color:var(--accent-ink); border-radius:6px; padding-block:.35rem; padding-inline:.9rem; font-weight:600; font-size:.85rem; font-family:inherit; }
+button.copy:hover { filter:brightness(1.1); }
+button.copy.done { background:var(--badge); border-color:var(--badge); color:#fff; }
+footer { padding-block:1rem 2.5rem; padding-inline:1.25rem; color:var(--muted); font-size:.85rem; border-block-start:1px solid var(--border); }
+@media print { nav, button.copy, .toolbar { display:none; } details.sec > summary::before { display:none; } .card { break-inside:avoid; box-shadow:none; } header { background:none; color:#000; } }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Microsoft 365 Copilot: Prompts to Try</h1>
+<p>Run these along with the session. Copy a prompt and send it. Each one is written for the Zava Energy demo story, so it works exactly as shown.</p>
+</div></header>
+<nav aria-label="Sections"><ul><li><a href="#fundamentals">Refresher: the fundamentals</a></li><li><a href="#app">Microsoft 365 Copilot app</a></li><li><a href="#teams">Copilot in Teams</a></li><li><a href="#outlook">Copilot in Outlook</a></li><li><a href="#word">Copilot in Word</a></li><li><a href="#excel">Copilot in Excel</a></li><li><a href="#powerpoint">Copilot in PowerPoint</a></li><li><a href="#skills">Skills and Agent Builder</a></li><li><a href="#cowork">Cowork: research, respond, and automate</a></li></ul></nav>
+<main>
+<div class="how">
+<h2>How to use this page</h2>
+<ul>
+<li>Select a section heading to open or close it.</li>
+<li>Select <strong>Copy</strong> on any prompt and paste it into Copilot. To try one on your own work afterward, swap in your own project, people, meetings, and files.</li>
+<li>Items marked <span class="badge today">Do it today</span> are quick settings you can turn on during the session. Items marked <span class="badge">New</span> were added for this session.</li>
+<li>Some features roll out in stages. If you don't see one yet, it may not have reached your organization.</li>
+<li>Copilot only uses content you already have permission to open, and nothing is sent, moved, or changed until you confirm it.</li>
+</ul>
+</div>
+<div class="toolbar"><button type="button" id="expand-all">Expand all</button><button type="button" id="collapse-all">Collapse all</button></div>
+<details class="sec" id="fundamentals"><summary><h2 id="fundamentals-h">Refresher: the fundamentals</h2><span class="meta">2 prompts, 1 how-to</span></summary><div class="sec-body">
+<div class="card steps"><div class="card-head"><h3>Add your custom instructions<span class="badge today">Do it today</span></h3><span class="tag">Steps</span></div><ol><li>In the Microsoft 365 Copilot app, open Settings and choose Personalization.</li><li>Turn on custom instructions and start from the sample instruction set, then edit it to fit how you work.</li></ol>
+</div>
+<div class="card"><div class="card-head"><h3>The prompt most people tried first</h3><button type="button" class="copy" data-target="p1" aria-label="Copy prompt: The prompt most people tried first">Copy</button></div><pre id="p1" class="prompt">Summarize my emails.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>The same goal, written well</h3><button type="button" class="copy" data-target="p2" aria-label="Copy prompt: The same goal, written well">Copy</button></div><pre id="p2" class="prompt">Review my email and Teams chats from the past week about the Red Butte RB-C-201 compressor outage. Write a short summary for Laurence Gilbertson with what changed, the decisions I need to make, and anything at risk. Put open items in a table with owner and due date, and keep it under 200 words.</pre>
+</div>
+</div></details>
+<details class="sec" id="app"><summary><h2 id="app-h">Microsoft 365 Copilot app</h2><span class="meta">6 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Step 1: Build the prompt with Prompt Coach</h3><button type="button" class="copy" data-target="p3" aria-label="Copy prompt: Step 1: Build the prompt with Prompt Coach">Copy</button></div><pre id="p3" class="prompt">@Prompt Coach Help me write a prompt for Researcher. I want a cited report on how growing natural gas demand from Texas data centers, power generation, and Gulf Coast LNG exports is affecting Permian Basin gas processing and takeaway capacity through 2030, including recent processing plant and pipeline expansions, published demand forecasts, and the main risks. The audience is Laurence Gilbertson, Chief Midstream &amp; Shipping Officer, and the report should end with implications for the operator of a 180 MMcf/d processing plant in Reeves County, Texas.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Step 2: Run the research with Researcher</h3><button type="button" class="copy" data-target="p4" aria-label="Copy prompt: Step 2: Run the research with Researcher">Copy</button></div><pre id="p4" class="prompt">@Researcher Research how growing natural gas demand from Texas data centers, power generation, and Gulf Coast LNG exports is affecting Permian Basin gas processing and takeaway capacity through 2030. Include recent processing plant and pipeline expansions, published demand forecasts, and the main risks. Cite every source and end with three implications for the operator of a 180 MMcf/d processing plant in Reeves County, Texas that is reviewing compressor reliability.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Step 3: Ask about the report in Chat</h3><button type="button" class="copy" data-target="p5" aria-label="Copy prompt: Step 3: Ask about the report in Chat">Copy</button></div><pre id="p5" class="prompt">Summarize this report in five bullets for Laurence Gilbertson.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Follow-up: test the sources</h3><button type="button" class="copy" data-target="p6" aria-label="Copy prompt: Follow-up: test the sources">Copy</button></div><pre id="p6" class="prompt">Which sources are the most recent, and how do their 2030 demand forecasts for Permian Basin gas compare?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Follow-up: pressure-test the conclusions</h3><button type="button" class="copy" data-target="p7" aria-label="Copy prompt: Follow-up: pressure-test the conclusions">Copy</button></div><pre id="p7" class="prompt">What are the three biggest risks to this outlook for a Reeves County processing plant, and what would change your conclusions?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Follow-up: put it to work</h3><button type="button" class="copy" data-target="p8" aria-label="Copy prompt: Follow-up: put it to work">Copy</button></div><pre id="p8" class="prompt">Turn this into a one-page Word brief for Laurence Gilbertson with the key findings, the risks, and three recommended next steps for the Red Butte Gas Processing Plant.</pre>
+</div>
+</div></details>
+<details class="sec" id="teams"><summary><h2 id="teams-h">Copilot in Teams</h2><span class="meta">1 how-to</span></summary><div class="sec-body">
+<div class="card steps"><div class="card-head"><h3>Add the Meeting Recaps app<span class="badge today">Do it today</span></h3><span class="tag">Steps</span></div><ol><li>In Teams, select View more apps (…) on the left side.</li><li>Search for Meeting recaps and select it.</li><li>Right-click Meeting recaps on the left side and select Pin so it&#x27;s always one click away.</li></ol>
+</div>
+</div></details>
+<details class="sec" id="outlook"><summary><h2 id="outlook-h">Copilot in Outlook</h2><span class="meta">5 prompts, 1 how-to</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Learn your writing style<span class="badge">New</span></h3><button type="button" class="copy" data-target="p9" aria-label="Copy prompt: Learn your writing style">Copy</button></div><pre id="p9" class="prompt">Review the last 250 emails that I have sent. Tell me what my writing style is like, so that I can provide custom draft instructions for Copilot in Outlook. Keep it brief and use bullet points.</pre>
+</div>
+<div class="card steps"><div class="card-head"><h3>Turn on draft instructions<span class="badge today">Do it today</span></h3><span class="tag">Steps</span></div><ol><li>In the new Outlook, open the Copilot menu and select Settings.</li><li>Select Draft Instructions and turn on Use custom instructions when drafting email.</li><li>Paste your style bullets, or start from the example below.</li></ol>
+</div>
+<div class="card"><div class="card-head"><h3>Example draft instructions</h3><button type="button" class="copy" data-target="p10" aria-label="Copy prompt: Example draft instructions">Copy</button></div><pre id="p10" class="prompt">Keep drafts short and direct, three to five sentences. Lead with the answer or decision. Use bullets only for lists of three or more items. Friendly but professional, with no exclamation points. Sign off with my first name only.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Find what you owe people</h3><button type="button" class="copy" data-target="p11" aria-label="Copy prompt: Find what you owe people">Copy</button></div><pre id="p11" class="prompt">What do I owe people this week?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Draft replies in bulk</h3><button type="button" class="copy" data-target="p12" aria-label="Copy prompt: Draft replies in bulk">Copy</button></div><pre id="p12" class="prompt">Draft replies to Karin and Katri. Tell Karin the Thursday 7:00 a.m. window works and to send the findings to me and Jamie by end of day Friday. Tell Katri the technical acceptance is in the RB-C-201 Repair Technical Acceptance Record and I&#x27;ll confirm the reference tomorrow.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Prioritize your inbox</h3><button type="button" class="copy" data-target="p13" aria-label="Copy prompt: Prioritize your inbox">Copy</button></div><pre id="p13" class="prompt">Prioritize my inbox and tell me why each item is a priority.</pre>
+</div>
+</div></details>
+<details class="sec" id="word"><summary><h2 id="word-h">Copilot in Word</h2><span class="meta">7 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Chat mode: understand the draft</h3><button type="button" class="copy" data-target="p14" aria-label="Copy prompt: Chat mode: understand the draft">Copy</button></div><pre id="p14" class="prompt">Summarize this draft and list what each reviewer asked for.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7BBB22105D-8340-494B-8F0C-729DFC8CB0A0%7D&amp;file=RB-C-201%20Outage%20Leadership%20Summary%20-%20Draft%20for%20Review.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">RB-C-201 Outage Leadership Summary - Draft for Review</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Edit mode: address the comments</h3><button type="button" class="copy" data-target="p15" aria-label="Copy prompt: Edit mode: address the comments">Copy</button></div><pre id="p15" class="prompt">Address every comment in this document. Make the changes as tracked changes, and resolve each comment once it&#x27;s handled.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7BBB22105D-8340-494B-8F0C-729DFC8CB0A0%7D&amp;file=RB-C-201%20Outage%20Leadership%20Summary%20-%20Draft%20for%20Review.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">RB-C-201 Outage Leadership Summary - Draft for Review</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Fill out a template</h3><button type="button" class="copy" data-target="p16" aria-label="Copy prompt: Fill out a template">Copy</button></div><pre id="p16" class="prompt">Fill out this template for the Red Butte Gas Processing Plant for October 2026 using the EVT-RB-2026-014 record, Red Butte Processing and Maintenance Performance, and the October 2026 Selected-Asset Operating Expense Ledger. Keep the template&#x27;s headings and tables, remove the guidance text, and highlight anything you couldn&#x27;t find in the sources.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7B35CAFA87-950A-41A0-8617-2606985CB929%7D&amp;file=Asset%20Monthly%20Operating%20Report%20-%20Template.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Asset Monthly Operating Report - Template</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7BEC956D20-FD0D-4B61-B056-3AA479132F51%7D&amp;file=EVT-RB-2026-014%20Compressor%20Outage%20Investigation%20and%20Return-to-Service%20Record.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">EVT-RB-2026-014 Compressor Outage Investigation and Return-to-Service Record</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7B3798EBDB-3FC9-494C-8A3F-3E4A3F868659%7D&amp;file=Red%20Butte%20Processing%20and%20Maintenance%20Performance.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Red Butte Processing and Maintenance Performance</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaFinance/_layouts/15/Doc.aspx?sourcedoc=%7B1457256B-77EB-416A-B2DD-761FB57B18D0%7D&amp;file=October%202026%20Selected-Asset%20Operating%20Expense%20Ledger.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">October 2026 Selected-Asset Operating Expense Ledger</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Legal skills (Word desktop): find the risks<span class="badge">New</span></h3><button type="button" class="copy" data-target="p17" aria-label="Copy prompt: Legal skills (Word desktop): find the risks">Copy</button></div><pre id="p17" class="prompt">What are the biggest risks to Zava Energy in this agreement related to liability, warranty, payment, and insurance? Cite the clauses.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaProcurement/_layouts/15/Doc.aspx?sourcedoc=%7B554E95A9-F5D5-40FC-8E97-A1974C858CBB%7D&amp;file=Contract_1_MSA_Subsea_Engineering_Services.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Contract_1_MSA_Subsea_Engineering_Services</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Legal skills (Word desktop): review against the playbook<span class="badge">New</span></h3><button type="button" class="copy" data-target="p18" aria-label="Copy prompt: Legal skills (Word desktop): review against the playbook">Copy</button></div><pre id="p18" class="prompt">Review this contract using a playbook.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaProcurement/_layouts/15/Doc.aspx?sourcedoc=%7B554E95A9-F5D5-40FC-8E97-A1974C858CBB%7D&amp;file=Contract_1_MSA_Subsea_Engineering_Services.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Contract_1_MSA_Subsea_Engineering_Services</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7B0AF3410B-381E-40D9-AE86-0360FABC7C20%7D&amp;file=ZavaEnergy_MSA_Contract_Standards_Playbook.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Zava Energy MSA Contract Standards Playbook</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Legal skills (Word desktop): redline one issue<span class="badge">New</span></h3><button type="button" class="copy" data-target="p19" aria-label="Copy prompt: Legal skills (Word desktop): redline one issue">Copy</button></div><pre id="p19" class="prompt">Update the governing law clause so this Agreement is governed by the laws of the State of Texas, without regard to its conflict of laws principles, with exclusive jurisdiction in the state and federal courts located in Harris County, Texas.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaProcurement/_layouts/15/Doc.aspx?sourcedoc=%7B554E95A9-F5D5-40FC-8E97-A1974C858CBB%7D&amp;file=Contract_1_MSA_Subsea_Engineering_Services.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Contract_1_MSA_Subsea_Engineering_Services</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Legal skills (Word desktop): check before signing<span class="badge">New</span></h3><button type="button" class="copy" data-target="p20" aria-label="Copy prompt: Legal skills (Word desktop): check before signing">Copy</button></div><pre id="p20" class="prompt">Is this agreement ready to sign? List anything that needs to be addressed before execution.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaProcurement/_layouts/15/Doc.aspx?sourcedoc=%7B554E95A9-F5D5-40FC-8E97-A1974C858CBB%7D&amp;file=Contract_1_MSA_Subsea_Engineering_Services.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Contract_1_MSA_Subsea_Engineering_Services</a></p>
+</div>
+</div></details>
+<details class="sec" id="excel"><summary><h2 id="excel-h">Copilot in Excel</h2><span class="meta">9 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Excel personalization<span class="badge today">Do it today</span></h3><button type="button" class="copy" data-target="p21" aria-label="Copy prompt: Excel personalization">Copy</button></div><pre id="p21" class="prompt">Format dates as yyyy-mm-dd. Show currency with a dollar sign and no decimals. Make header rows bold with a dark slate fill and white text. Use XLOOKUP instead of VLOOKUP. Build PivotTables in tabular form with no subtotals. Give new sheets short, descriptive names.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Plan before changing anything</h3><button type="button" class="copy" data-target="p22" aria-label="Copy prompt: Plan before changing anything">Copy</button></div><pre id="p22" class="prompt">Plan how you would clean this work order export so I can report October maintenance cost and the open backlog by equipment. Don&#x27;t change anything yet.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7BE9AAF5B9-C37B-44FE-A101-BEF7746F2580%7D&amp;file=Red%20Butte%20Maintenance%20Work%20Order%20Export%20-%20October%202026.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Red Butte Maintenance Work Order Export - October 2026</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Clean the data with a built-in skill</h3><button type="button" class="copy" data-target="p23" aria-label="Copy prompt: Clean the data with a built-in skill">Copy</button></div><pre id="p23" class="prompt">@clean-data Clean this table. Remove duplicate work orders and blank rows, standardize equipment tags, statuses, work types, and priorities, and convert the dates, hours, and costs to real dates and numbers.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Summarize on a new sheet</h3><button type="button" class="copy" data-target="p24" aria-label="Copy prompt: Summarize on a new sheet">Copy</button></div><pre id="p24" class="prompt">On a new sheet, summarize October actual cost by GL account and equipment for completed and closed work orders, and list the open work orders by target date.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Build two charts on a new sheet</h3><button type="button" class="copy" data-target="p25" aria-label="Copy prompt: Build two charts on a new sheet">Copy</button></div><pre id="p25" class="prompt">Create a new sheet with 2 graphs: one should be a vertically stacked bar chart with each bar representing a crew, and each bar broken down into 3 sections: where actual total cost was less than estimated cost, where it was equal to estimated cost, and where actual cost exceeded estimated cost. The other graph should show a breakdown in a pie chart by worktype. Don&#x27;t show data labels where the value is 0.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>See what changed</h3><button type="button" class="copy" data-target="p26" aria-label="Copy prompt: See what changed">Copy</button></div><pre id="p26" class="prompt">What changed in this workbook during this session?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Save the chart steps as a custom skill</h3><button type="button" class="copy" data-target="p27" aria-label="Copy prompt: Save the chart steps as a custom skill">Copy</button></div><pre id="p27" class="prompt">@skill-builder Save the steps you just used to build those two charts as a custom skill called work-order-visuals, so the team can run it on next month&#x27;s work order export.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Explain where costs missed the estimate</h3><button type="button" class="copy" data-target="p27a" aria-label="Copy prompt: Explain where costs missed the estimate">Copy</button></div><pre id="p27a" class="prompt">@variance-analysis Compare actual total cost with estimated cost for the completed work orders. Show the dollar and percent variance by crew and by work type, list the work orders where actual cost didn&#x27;t match the estimate, and draft a short explanation of the biggest variances for my review.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Tie it out to Finance</h3><button type="button" class="copy" data-target="p28" aria-label="Copy prompt: Tie it out to Finance">Copy</button></div><pre id="p28" class="prompt">Does the routine maintenance total tie to account 620400 for cost center M120 in the October 2026 Selected-Asset Operating Expense Ledger?</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaFinance/_layouts/15/Doc.aspx?sourcedoc=%7B1457256B-77EB-416A-B2DD-761FB57B18D0%7D&amp;file=October%202026%20Selected-Asset%20Operating%20Expense%20Ledger.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">October 2026 Selected-Asset Operating Expense Ledger</a></p>
+</div>
+</div></details>
+<details class="sec" id="powerpoint"><summary><h2 id="powerpoint-h">Copilot in PowerPoint</h2><span class="meta">4 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Build a deck from your work</h3><button type="button" class="copy" data-target="p29" aria-label="Copy prompt: Build a deck from your work">Copy</button></div><pre id="p29" class="prompt">Create a six-slide update on the RB-C-201 compressor outage for the Midstream Leadership Review with Laurence Gilbertson. Use the RB-C-201 Close-Out Review meeting, my recent emails from Laurence, Karin, Katri, Renee, and Charlotte, and the EVT-RB-2026-014 record. Cover what happened, the volume impact, cost, open follow-up actions with owners, the retrofit business case recommendation, and next steps.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/allcompany/Zava%20Brand%20Templates" target="_blank" rel="noopener">Zava PowerPoint template</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaPipelineOps/_layouts/15/Doc.aspx?sourcedoc=%7BEC956D20-FD0D-4B61-B056-3AA479132F51%7D&amp;file=EVT-RB-2026-014%20Compressor%20Outage%20Investigation%20and%20Return-to-Service%20Record.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">EVT-RB-2026-014 Compressor Outage Investigation and Return-to-Service Record</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Steer a slide from its notes</h3><button type="button" class="copy" data-target="p30" aria-label="Copy prompt: Steer a slide from its notes">Copy</button></div><pre id="p30" class="prompt">Show October Red Butte operating cost as a bridge from the $1,460,000 budget to the $1,576,000 actual: base operations $10,000 under budget, then the $126,000 RB-C-201 repair.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Create an interactive slide<span class="badge">New</span></h3><button type="button" class="copy" data-target="p31" aria-label="Copy prompt: Create an interactive slide">Copy</button></div><pre id="p31" class="prompt">Create a slide at the end that shows the following stock prices at the end of each year since 2020: WMB, KMI, ET and EPD. Include filters to show or hide each stock price on the graph.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Add speaker notes</h3><button type="button" class="copy" data-target="p32" aria-label="Copy prompt: Add speaker notes">Copy</button></div><pre id="p32" class="prompt">Add speaker notes to every slide, 60 to 90 words each, written the way I&#x27;d say it out loud.</pre>
+</div>
+</div></details>
+<details class="sec" id="skills"><summary><h2 id="skills-h">Skills and Agent Builder</h2><span class="meta">7 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Create a skill in Copilot Chat</h3><button type="button" class="copy" data-target="p33" aria-label="Copy prompt: Create a skill in Copilot Chat">Copy</button></div><pre id="p33" class="prompt">Create a skill called weekly-status-update. When I ask for a status update on a project or operating issue, start with its latest status report, risk and issue register, change order log, and schedule tracker, then add anything from the last 7 days of email, Teams chats, meetings, and files about it. Start with an overall status of On track, At risk, or Off track and one sentence on why. Then list up to three bullets for this week and three for next week with owners, a risks and issues table with impact, owner, and due date, and any decisions needed. Don&#x27;t report a forecast, a draft, or a requested decision date as done unless a record shows it happened. Keep it under 250 words.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Run the skill</h3><button type="button" class="copy" data-target="p34" aria-label="Copy prompt: Run the skill">Copy</button></div><pre id="p34" class="prompt">@weekly-status-update Project Saddleback</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ProjectSaddleback/Shared%20Documents" target="_blank" rel="noopener">Project Saddleback documents</a> <a href="https://diax78543085.sharepoint.com/sites/ProjectSaddleback/Shared%20Documents/04%20-%20Monthly%20Status%20Reports/Saddleback%20Monthly%20Status%20Report%20-%202026-09%20(September%202026).docx" target="_blank" rel="noopener">Saddleback Monthly Status Report - 2026-09 (September 2026)</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Build a policy agent in Agent Builder</h3><button type="button" class="copy" data-target="p34a" aria-label="Copy prompt: Build a policy agent in Agent Builder">Copy</button></div><pre id="p34a" class="prompt">Create an agent called Zava Policy Assistant that answers employee questions about Zava Energy HR policies, such as paid time off, travel and expenses, remote and hybrid work, benefits, leave, and conduct. Use only the official Zava HR Policies library on the Zava HR site as your source: https://diax78543085.sharepoint.com/sites/ZavaHR/Zava%20HR%20Policies. For every answer, give the policy number and section and link to the policy. Ignore any document marked PROPOSED or DRAFT. If the policies don&#x27;t answer the question, say so and refer the employee to the HR Service Center at 1-800-555-0142 instead of guessing. Keep answers short and in plain language.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaHR/Zava%20HR%20Policies" target="_blank" rel="noopener">Zava HR Policies library</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Ask the agent: travel</h3><button type="button" class="copy" data-target="p34b" aria-label="Copy prompt: Ask the agent: travel">Copy</button></div><pre id="p34b" class="prompt">I&#x27;m flying to Houston for a three-day training. What can I claim for meals, and can I book business class?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Ask the agent: time off</h3><button type="button" class="copy" data-target="p34c" aria-label="Copy prompt: Ask the agent: time off">Copy</button></div><pre id="p34c" class="prompt">I&#x27;ve been here six years. How much PTO do I get, and how far ahead do I need to request a week off?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Ask the agent: hybrid work</h3><button type="button" class="copy" data-target="p34d" aria-label="Copy prompt: Ask the agent: hybrid work">Copy</button></div><pre id="p34d" class="prompt">Can a control room operator work a hybrid schedule?</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Ask something the policies don't cover</h3><button type="button" class="copy" data-target="p34e" aria-label="Copy prompt: Ask something the policies don't cover">Copy</button></div><pre id="p34e" class="prompt">What&#x27;s the meal per diem for a trip to Calgary?</pre>
+</div>
+</div></details>
+<details class="sec" id="cowork"><summary><h2 id="cowork-h">Cowork: research, respond, and automate</h2><span class="meta">7 prompts</span></summary><div class="sec-body">
+<div class="card"><div class="card-head"><h3>Prep for a customer meeting</h3><button type="button" class="copy" data-target="p35" aria-label="Copy prompt: Prep for a customer meeting">Copy</button></div><pre id="p35" class="prompt">I&#x27;m meeting with Bayou Industrial Gas tomorrow about OPP-2026-073. Pull the account and its recent call reports from Salesforce, check my email, Teams, and the Customer Proposals library in Zava Commercial for the latest on BIG-RFP-26-118, and build a one-page meeting brief in Word with the opportunity background, what we can commit to, what is still qualified, the approval gates before the November 23 deadline, and three talking points.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaCommercial/Shared%20Documents/Customer%20Proposals" target="_blank" rel="noopener">Customer Proposals library</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaCommercial/_layouts/15/Doc.aspx?sourcedoc=%7B55BF420C-19F8-4703-80E1-F8C16C31950E%7D&amp;file=BIG-RFP-26-118%20Technical%20and%20Commercial%20Proposal.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">BIG-RFP-26-118 Technical and Commercial Proposal</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Log the call in Salesforce</h3><button type="button" class="copy" data-target="p36" aria-label="Copy prompt: Log the call in Salesforce">Copy</button></div><pre id="p36" class="prompt">Here are my notes from today&#x27;s call with Bayou Industrial Gas: Danielle Thibodeaux and Marcus Guidry joined. Bayou confirmed it needs up to 25 MMcf/d from January 1, 2028. Marcus asked whether the 90% daily minimum could step up during the first year of service, and asked how Red Butte reliability looks after the October 14 compressor trip. We agreed to answer both in writing before the proposal is due November 23. Create a call report in Salesforce for Bayou Industrial Gas dated today with these notes, then draft a follow-up email to the attendees summarizing next steps.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Research a request and draft a reply</h3><button type="button" class="copy" data-target="p37" aria-label="Copy prompt: Research a request and draft a reply">Copy</button></div><pre id="p37" class="prompt">Open the email from Tom Pruitt in Kingfisher County about the fence, driveway, and pecan trees. Research the request: check it against the Cross Timbers Landowner Encroachment Review Guidelines and the Zava Standards for Easement Agreements, look for earlier emails from this landowner and any entry in the Cross Timbers Encroachment Request Log, and find the land rep for Kingfisher County. Give me a short summary of what he&#x27;s asking, which guideline category each item falls in, a suggested risk level, and what we still need to confirm. Then draft a reply for my review.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7BA3025186-50D6-4325-A3B3-0472403A4862%7D&amp;file=Cross%20Timbers%20Landowner%20Encroachment%20Review%20Guidelines.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Cross Timbers Landowner Encroachment Review Guidelines</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7B9C010BF9-7781-4E87-9A5C-09A515139CCE%7D&amp;file=Zava_Standards_for_Easement_Agreements.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Zava Standards for Easement Agreements</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7B664E7B34-3D25-4AEE-BFF7-574425643680%7D&amp;file=Cross%20Timbers%20Encroachment%20Request%20Log.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Cross Timbers Encroachment Request Log</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Automate it when an email arrives</h3><button type="button" class="copy" data-target="p38" aria-label="Copy prompt: Automate it when an email arrives">Copy</button></div><pre id="p38" class="prompt">Whenever an email arrives with &#x27;Encroachment Request&#x27; in the subject, do what you just did: research the request against the Cross Timbers Landowner Encroachment Review Guidelines, add a row to the Cross Timbers Encroachment Request Log with the next request ID, requester, county, state, latitude and longitude if given, request type, guideline category, suggested risk level, status &#x27;New&#x27;, and assigned land rep, draft an acknowledgment reply for my review, and post a short summary in the Land - Encroachment Requests channel.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7BA3025186-50D6-4325-A3B3-0472403A4862%7D&amp;file=Cross%20Timbers%20Landowner%20Encroachment%20Review%20Guidelines.docx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Cross Timbers Landowner Encroachment Review Guidelines</a> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7B664E7B34-3D25-4AEE-BFF7-574425643680%7D&amp;file=Cross%20Timbers%20Encroachment%20Request%20Log.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Cross Timbers Encroachment Request Log</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Weekly leadership update, every Monday<span class="badge">New</span></h3><button type="button" class="copy" data-target="p39" aria-label="Copy prompt: Weekly leadership update, every Monday">Copy</button></div><pre id="p39" class="prompt">Set this up as a weekly scheduled task that runs every Monday at 7:00 a.m. my time.
+
+Reconstruct what I accomplished at work over the past 7 days and email me a concise leadership update to use in my next manager check-in.
+
+Sources to review for the last 7 days: emails I sent and threads I actively drove (Sent Items, read the full message for substantive replies); Teams chats and channel messages where I contributed meaningfully (read my own messages plus enough surrounding context to understand them); meetings I led, organized, presented in, or owned follow-up for; and files I created or edited (Word, PowerPoint, Excel, Loop, OneNote). Check the content of key decks or documents I authored so they can be described accurately. Focus on work that moved something forward. Ignore routine back-and-forth, FYI noise, meeting accept/decline notices, status-only meetings, recurring syncs that produced no decision, deliverable or next step, and personal or social chats.
+
+Send one email to me only, subject &quot;Leadership update: &lt;start date&gt; – &lt;end date&gt;&quot;, with exactly three sections:
+
+1. Accomplished: what was completed, progressed or became clearer. Be specific and tie each item to a real artifact, email thread, chat or meeting (name the stakeholder, the artifact or thread, and the date). Include nothing that cannot be traced back to a source.
+2. Needs input: open questions, blockers, decisions, or areas where leadership input or help would be useful. If there is nothing substantive, write &quot;n/a.&quot;
+3. Looking ahead: work continuing or starting in the coming week, inferred from this week&#x27;s activity and the upcoming calendar. Do not transcribe the calendar. Name a specific meeting or session only if it is real work I am driving, and skip routine or recurring syncs.
+
+Keep the email skimmable in under one minute: short bullets, bolded customer or topic leads, no padding. If something might not belong, or its attribution is unclear (for example, which customer a chat refers to), mark it &quot;(uncertain)&quot; inline instead of guessing. If a section is thin, add a short final line, &quot;Context to add:&quot;, saying what I should add rather than padding the section. If there was almost no meaningful activity this week (for example, I was out of office), still send a brief email that says so and lists any open items.</pre>
+</div>
+<div class="card"><div class="card-head"><h3>Build an app to track it all</h3><button type="button" class="copy" data-target="p40" aria-label="Copy prompt: Build an app to track it all">Copy</button></div><pre id="p40" class="prompt">Now that requests are coming in automatically, I want one place to see them all. Build an app called Cross Timbers Encroachment Board for the land team using the Cross Timbers Encroachment Request Log. Show every request with requester, county, state, request type, risk level, status, and assigned land rep. Add a map that plots each request by latitude and longitude, color-coded by risk level. Let land reps filter by state, county, status, and risk level, and update a request&#x27;s status.</pre>
+<p class="files"><span>Open:</span> <a href="https://diax78543085.sharepoint.com/sites/ZavaLegal/_layouts/15/Doc.aspx?sourcedoc=%7B664E7B34-3D25-4AEE-BFF7-574425643680%7D&amp;file=Cross%20Timbers%20Encroachment%20Request%20Log.xlsx&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener">Cross Timbers Encroachment Request Log</a></p>
+</div>
+<div class="card"><div class="card-head"><h3>Refine the app</h3><button type="button" class="copy" data-target="p41" aria-label="Copy prompt: Refine the app">Copy</button></div><pre id="p41" class="prompt">Add a column showing how many days each request has been open, and flag anything open longer than 30 days.</pre>
+</div>
+</div></details>
+</main>
+<footer>Prepared by Microsoft.</footer>
+<script>
+var secs = document.querySelectorAll("details.sec");
+function openHash() {
+  var id = decodeURIComponent(location.hash.slice(1));
+  var el = id ? document.getElementById(id) : null;
+  if (el && el.tagName === "DETAILS") { el.open = true; el.scrollIntoView({ block: "start" }); }
+}
+document.querySelectorAll("nav a").forEach(function (a) {
+  a.addEventListener("click", function () {
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (el) { el.open = true; }
+  });
+});
+window.addEventListener("hashchange", openHash);
+openHash();
+document.getElementById("expand-all").addEventListener("click", function () { secs.forEach(function (d) { d.open = true; }); });
+document.getElementById("collapse-all").addEventListener("click", function () { secs.forEach(function (d) { d.open = false; }); });
+window.addEventListener("beforeprint", function () { secs.forEach(function (d) { d.open = true; }); });
+document.querySelectorAll("button.copy").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var el = document.getElementById(btn.getAttribute("data-target"));
+    var text = el ? el.textContent : "";
+    var done = function () {
+      btn.textContent = "Copied";
+      btn.classList.add("done");
+      setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("done"); }, 1800);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } finally { document.body.removeChild(ta); }
+    }
+  });
+});
+</script>
+</body>
+</html>
